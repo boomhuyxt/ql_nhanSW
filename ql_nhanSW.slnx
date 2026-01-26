@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../QL-BUS/QL-BUS.csproj" />
+  <Project Path="ql_nhanSW.csproj" />
+</Solution>

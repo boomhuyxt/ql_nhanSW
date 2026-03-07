@@ -212,7 +212,7 @@
                                 Foreground="#083e12"
                                 FontSize="16"
                                 FontFamily="Segoe UI"
-                                Width="120"
+                                Width="170"
                                 Height="45"
                                 Margin="5 0 0 0"                                
                                 Style="{StaticResource MaterialDesignFlatButton}"

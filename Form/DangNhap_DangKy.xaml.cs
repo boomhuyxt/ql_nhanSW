@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -41,6 +42,32 @@ namespace ql_nhanSW.Form
         {
             SignInPanel.Visibility = Visibility.Visible;
             SignUpPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Login_Click(object sender, RoutedEventArgs e)
+        {
+            var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
+            RightBoard.BeginAnimation(OpacityProperty, fadeOut);
+            await Task.Delay(400);
+
+            RightBoard.Visibility = Visibility.Collapsed;
+            LeftBoard.SetValue(Grid.ColumnSpanProperty, 2);
+            LeftBoard.CornerRadius = new CornerRadius(10);
+            LeftBoard.Clip = null;
+
+            LoadingOverlay.Visibility = Visibility.Visible;
+
+            
+            await Task.Delay(3000);
+
+            var main = new MainWindow();
+            main.Show();
+            this.Close();
         }
     }
 }

@@ -5,14 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ql_nhanSW"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        FontSize="18"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
     <Grid>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black"/>
-                <GradientStop Color="#FF973D9C" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="30"
+                              ShadowDepth="1"
+                              Opacity="0.4"/>
+        </Grid.Effect>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>            
+            <ColumnDefinition Width="6.5*"/>            
+        </Grid.ColumnDefinitions>
+
+        <Border  x:Name="LeftBorder">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    
+                    
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid></Grid>
+        </Border>
     </Grid>
 </Window>

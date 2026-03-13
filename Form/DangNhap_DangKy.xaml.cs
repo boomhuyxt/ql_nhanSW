@@ -63,11 +63,7 @@ namespace ql_nhanSW.Form
             LoadingOverlay.Visibility = Visibility.Visible;
 
             
-            await Task.Delay(3000);
-
-            var main = new MainWindow();
-            main.Show();
-            this.Close();
+            
         }
     }
 }

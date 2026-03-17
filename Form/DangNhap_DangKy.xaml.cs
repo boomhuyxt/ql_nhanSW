@@ -21,7 +21,6 @@ namespace ql_nhanSW.Form
         public Window1()
         {
             InitializeComponent();
-
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -42,11 +41,6 @@ namespace ql_nhanSW.Form
         {
             SignInPanel.Visibility = Visibility.Visible;
             SignUpPanel.Visibility = Visibility.Collapsed;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)

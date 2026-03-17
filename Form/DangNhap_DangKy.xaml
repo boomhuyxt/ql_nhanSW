@@ -90,23 +90,6 @@
 
             </Grid>
         </Border>
-        <!--RGIHT SECTION-->
-        <Border x:Name="RightBoard" Background="#ffffff"
-                CornerRadius="0 10 10 0"
-                MouseDown="Border_MouseDown" 
-                Grid.ColumnSpan="2" Margin="376,0,0,5">
-            <Grid>                
-                <!--SIGN IN PANEL-->
-                <StackPanel x:Name="SignInPanel"
-                            Visibility="Visible"
-                            VerticalAlignment="Center"
-                            Margin="75 0">
-
-                    <TextBlock Style="{StaticResource titleText}"
-                               Text="Sign In"
-                               FontSize="60"
-                               HorizontalAlignment="Center"
-                               Foreground="#083e12"/>
 
                     <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              Text=""
@@ -201,32 +184,11 @@
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         
-                        <Button Content="Sign Up"
-                                Foreground="#00ff9f"
-                                Background="#083e12"
-                                FontSize="16"
-                                FontFamily="Segoe UI"
-                                Width="120"
-                                Height="45"
-                                materialDesign:ButtonAssist.CornerRadius="22"/>
-                        <Button Content="return to Login"
-                                Foreground="#083e12"
-                                FontSize="16"
-                                FontFamily="Segoe UI"
-                                Width="170"
-                                Height="45"
-                                Margin="5 0 0 0"                                
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                materialDesign:ButtonAssist.CornerRadius="22"
-                                Click="SwitchLogin_Click" RenderTransformOrigin="31.905,-2.563"/>
-                    </StackPanel>                    
                 </StackPanel>
             </Grid>
-        </Border>
 
         <Grid x:Name="LoadingOverlay"
               Visibility="Collapsed"
-              Grid.ColumnSpan="2"
               Panel.ZIndex="99">
 
             <Rectangle Fill="#000000"

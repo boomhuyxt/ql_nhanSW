@@ -14,15 +14,8 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None">
     <Grid>
-        <Grid.Effect>
-            <DropShadowEffect BlurRadius="30"
-                              ShadowDepth="1"
-                              Opacity="0.4"/>
-        </Grid.Effect>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>            
-            <ColumnDefinition Width="6.5*"/>            
         </Grid.ColumnDefinitions>
 
         <Border  x:Name="LeftBorder">

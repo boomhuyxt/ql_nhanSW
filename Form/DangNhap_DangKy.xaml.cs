@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,9 +14,7 @@ using System.Windows.Shapes;
 
 namespace ql_nhanSW.Form
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
+
     public partial class Window1 : Window
     {
         public Window1()
@@ -25,7 +24,7 @@ namespace ql_nhanSW.Form
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left)
             {
                 this.DragMove();
             }
@@ -41,23 +40,42 @@ namespace ql_nhanSW.Form
         {
             SignInPanel.Visibility = Visibility.Visible;
             SignUpPanel.Visibility = Visibility.Collapsed;
+            LoadingOverlay.Visibility = Visibility.Collapsed;
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
+            // Fade out SignInPanel
             var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
-            RightBoard.BeginAnimation(OpacityProperty, fadeOut);
+            SignInPanel.BeginAnimation(OpacityProperty, fadeOut);
             await Task.Delay(400);
 
-            RightBoard.Visibility = Visibility.Collapsed;
-            LeftBoard.SetValue(Grid.ColumnSpanProperty, 2);
-            LeftBoard.CornerRadius = new CornerRadius(10);
-            LeftBoard.Clip = null;
-
+            SignInPanel.Visibility = Visibility.Collapsed;
             LoadingOverlay.Visibility = Visibility.Visible;
 
-            
-            
+            // Fade in LoadingOverlay
+            var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
+            LoadingOverlay.BeginAnimation(OpacityProperty, fadeIn);
+
+            // TODO: Sau này thêm logic kiểm tra đăng nhập ở đây
+            // var main = new TrangChu();
+            // main.Show();
+            // this.Close();
+        }
+
+        private void LogoutBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // Fade out LoadingOverlay
+            var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
+            LoadingOverlay.BeginAnimation(OpacityProperty, fadeOut);
+
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+
+            // Fade in SignInPanel
+            SignInPanel.Visibility = Visibility.Visible;
+            var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
+            SignInPanel.BeginAnimation(OpacityProperty, fadeIn);
         }
     }
+
 }

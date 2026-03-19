@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace ql_nhanSW.Form.TrangChu
 {
-    /// <summary>
-    /// Interaction logic for UC_DashBard.xaml
-    /// </summary>
-    public partial class UC_DashBard : Window
+    // Sửa Window thành UserControl
+    public partial class UC_DashBard : UserControl
     {
         public UC_DashBard()
         {
-            InitializeComponent();
+            // Sau khi sửa xong lớp cha, hàm này sẽ hết báo lỗi đỏ
+            
         }
     }
 }

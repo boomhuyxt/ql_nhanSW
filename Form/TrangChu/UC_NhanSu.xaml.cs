@@ -12,10 +12,8 @@ using System.Windows.Shapes;
 
 namespace ql_nhanSW.Form.TrangChu
 {
-    /// <summary>
-    /// Interaction logic for UC_NhanSu.xaml
-    /// </summary>
-    public partial class UC_NhanSu : Window
+    // Sửa Window thành UserControl ở đây
+    public partial class UC_NhanSu : UserControl
     {
         public UC_NhanSu()
         {

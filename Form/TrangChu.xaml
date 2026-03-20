@@ -161,7 +161,6 @@
                             <TextBlock Text="Cài đặt" FontSize="12" Foreground="#9D78CC" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-
                     <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10">
                         <StackPanel Orientation="Horizontal">
                             <Border Width="32" Height="32" CornerRadius="16"

@@ -15,9 +15,9 @@ namespace ql_nhanSW.Form.TrangChu
     /// <summary>
     /// Interaction logic for UC_DashBard.xaml
     /// </summary>
-    public partial class UC_DashBard : Window
+    public partial class UC_DashBoard : UserControl
     {
-        public UC_DashBard()
+        public UC_DashBoard()
         {
             InitializeComponent();
         }

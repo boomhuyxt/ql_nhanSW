@@ -15,7 +15,7 @@ namespace ql_nhanSW.Form.TrangChu
     /// <summary>
     /// Interaction logic for UC_CauHinhLuong.xaml
     /// </summary>
-    public partial class UC_CauHinhLuong : Window
+    public partial class UC_CauHinhLuong : UserControl
     {
         public UC_CauHinhLuong()
         {

@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ql_nhanSW.Form;
 
 namespace ql_nhanSW
 {
@@ -18,9 +19,13 @@ namespace ql_nhanSW
     /// </summary>
     public partial class Page1 : Page
     {
+<<<<<<< Updated upstream
         public Page1()
         {
             InitializeComponent();
         }
+=======
+
+>>>>>>> Stashed changes
     }
 }

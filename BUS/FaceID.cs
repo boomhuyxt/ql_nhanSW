@@ -2,24 +2,45 @@
 using Emgu.CV.Structure;
 using FaceRecognitionDotNet;
 using System;
+using System.Linq;
 using System.Drawing;
 using System.Linq;
+
 
 namespace ql_nhanSW.BUS
 {
     internal class FaceID
     {
+        private VideoCapture _camera;
         private CascadeClassifier _faceDetector;
         private FaceRecognition _faceRecognition;
 
         public FaceID()
         {
+            // Load AI model detect face
             // Model detect face (OpenCV)
             _faceDetector = new CascadeClassifier("AI/haarcascade_frontalface_default.xml");
 
+            // Load model tạo vector khuôn mặt
             // Model tạo vector khuôn mặt
             _faceRecognition = FaceRecognition.Create("AI");
+
+            // mở camera
+            _camera = new VideoCapture(0);
         }
+
+        //1. Lấy frame từ camera
+
+        public Mat GetCameraFrame()
+        {
+            Mat frame = new Mat();
+            _camera.Read(frame);
+            return frame;
+        }
+
+
+        // 2. Detect khuôn mặt
+
 
         // 1. Detect khuôn mặt
         public Rectangle[] DetectFaces(Mat frame)
@@ -27,11 +48,20 @@ namespace ql_nhanSW.BUS
             Image<Bgr, byte> image = frame.ToImage<Bgr, byte>();
             Image<Gray, byte> gray = image.Convert<Gray, byte>();
 
+            var faces = _faceDetector.DetectMultiScale(
+                gray,
+                1.1,
+                5
+            );
+
+            return faces;
             return _faceDetector.DetectMultiScale(gray, 1.1, 5);
         }
 
 
+        // 3. Vẽ khung khuôn mặt
         // 2. Vẽ khung xanh quanh mặt
+
 
         public Mat DrawFaceBox(Mat frame)
         {
@@ -48,14 +78,18 @@ namespace ql_nhanSW.BUS
         }
 
 
+        // 4. Lưu ảnh khuôn mặt
         // 3. Lưu ảnh khuôn mặt
 
+
+        public void SaveFaceImage(Mat frame, string path)
         public void SaveFace(Mat frame, string path)
         {
             frame.Save(path);
         }
 
 
+        // 5. Tạo vector khuôn mặt
         // 4. Tạo vector khuôn mặt
 
         public float[] GetFaceVector(string imagePath)
@@ -63,21 +97,24 @@ namespace ql_nhanSW.BUS
             var image = FaceRecognition.LoadImageFile(imagePath);
 
             var encoding = _faceRecognition
-                .FaceEncodings(image)
-                .FirstOrDefault();
+                            .FaceEncodings(image)
+                            .FirstOrDefault();
 
             if (encoding == null)
                 return null;
 
             return encoding
-                .GetRawEncoding()
-                .Select(x => (float)x)
-                .ToArray();
+                    .GetRawEncoding()
+                    .Select(x => (float)x)
+                    .ToArray();
         }
 
 
+        // 6. So sánh vector khuôn mặt
+
         // 5. So sánh vector khuôn mặt
 
+        public double CompareFaceVector(float[] v1, float[] v2)
         public double CompareFace(float[] v1, float[] v2)
         {
             if (v1 == null || v2 == null)
@@ -94,12 +131,49 @@ namespace ql_nhanSW.BUS
         }
 
 
+        // 7. Kiểm tra cùng người
         // 6. Kiểm tra cùng người
 
         public bool IsSamePerson(float[] inputVector, float[] dbVector)
         {
+            double distance = CompareFaceVector(inputVector, dbVector);
+
+            // ngưỡng nhận diện
+            if (distance < 0.6)
+                return true;
+
+            return false;
+        }
+
+        // 8. Logic Check-In / Check-Out
+        //---------------------------------------
+
+        public bool CheckEmployee(string inputImage, float[] dbVector)
+        {
+            float[] inputVector = GetFaceVector(inputImage);
+
+            if (inputVector == null)
+                return false;
+
+            return IsSamePerson(inputVector, dbVector);
+        }
+        public Mat ScanFace()
+        {
+            Mat frame = new Mat();
+            _camera.Read(frame);
+
+            var image = frame.ToImage<Bgr, byte>();
+            var gray = image.Convert<Gray, byte>();
+
+            var faces = _faceDetector.DetectMultiScale(gray, 1.1, 5);
+
+            foreach (var face in faces)
+            {
+                image.Draw(face, new Bgr(0, 255, 0), 2);
+            }
             double distance = CompareFace(inputVector, dbVector);
 
+            return image.Mat;
             return distance < 0.6; // ngưỡng nhận diện
         }
     }

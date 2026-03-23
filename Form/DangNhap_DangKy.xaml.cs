@@ -18,11 +18,19 @@ namespace ql_nhanSW.Form
 
     public partial class Window1 : Window
     {
+<<<<<<< HEAD
 
         public Window1()
+=======
+<<<<<<< Updated upstream
+        public Page1()
+>>>>>>> 8f09a769f5d73847d634152dff51780143c842df
         {
             InitializeComponent();
         }
+=======
+
+>>>>>>> Stashed changes
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {

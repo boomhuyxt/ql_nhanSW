@@ -13,6 +13,7 @@ namespace ql_nhanSW.Models
         public DbSet<ChamCong> ChamCongs { get; set; }
         public DbSet<LichSuCongTac> LichSuCongTac { get; set; }
         public DbSet<HopDongLaoDong> HopDongLaoDong { get; set; }
+        public DbSet<NghiPhep> NghiPhep { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

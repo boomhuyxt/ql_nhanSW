@@ -21,5 +21,11 @@ namespace ql_nhanSW.Form.TrangChu
         {
             InitializeComponent();
         }
+
+        private void BtnOpenChat_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            mainWindow?.ToggleChat();
+        }
     }
 }

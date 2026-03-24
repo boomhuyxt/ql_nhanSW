@@ -25,12 +25,16 @@ namespace ql_nhanSW
 
         private void SetActiveButton(Button activeBtn)
         {
-            BtnDashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0A0010"));
+            BtnDashBoard.Background = new SolidColorBrush(Colors.Transparent);
             BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
+            BtnNhanSu.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnPheDuyet.Background = new SolidColorBrush(Colors.Transparent);
+            BtnPheDuyet.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
+            BtnCauHinhLuong.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnBaoCaoTK.Background = new SolidColorBrush(Colors.Transparent);
+            BtnBaoCaoTK.BorderBrush = new SolidColorBrush(Colors.Transparent);
 
             activeBtn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E0040"));
             activeBtn.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C3AED"));
@@ -51,7 +55,7 @@ namespace ql_nhanSW
         private void BtnPheDuyet_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnPheDuyet);
-            //MainContent.Content = new UC_PheDuyet();
+            // MainContent.Content = new UC_PheDuyet();
         }
 
         private void BtnCauHinhLuong_Click(object sender, RoutedEventArgs e)
@@ -63,29 +67,32 @@ namespace ql_nhanSW
         private void BtnBaoCaoTK_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnBaoCaoTK);
-            //MainContent.Content = new UC_BaoCaoTK();
+            // MainContent.Content = new UC_BaoCaoTK();
         }
 
-        private void BtnToggleChat_Click(object sender, RoutedEventArgs e)
-        {
-            ChatPanel.Visibility = ChatPanel.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
+        // ===== CHAT PANEL =====
+        public void ToggleChat()
+        {            
+            if (ChatCol.Width.Value == 0)
+                ChatCol.Width = new GridLength(300);
+            else
+                ChatCol.Width = new GridLength(0);
         }
 
         private void BtnCloseChat_Click(object sender, RoutedEventArgs e)
         {
-            ChatPanel.Visibility = Visibility.Collapsed;
+            ChatCol.Width = new GridLength(0);
+        }
+
+        private void ChatInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                SendMessage();
         }
 
         private void BtnSendChat_Click(object sender, RoutedEventArgs e)
         {
             SendMessage();
-        }
-
-        private void ChatInput_KeyDown(object sender, KeyEventArgs e)
-        {
-                SendMessage();
         }
 
         private void SendMessage()
@@ -116,7 +123,12 @@ namespace ql_nhanSW
             ChatInput.Text = string.Empty;
 
             // Bubble bot
-            var botRow = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 12) };
+            var botRow = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(0, 0, 0, 12)
+            };
+
             botRow.Children.Add(new Border
             {
                 Width = 28,
@@ -135,6 +147,7 @@ namespace ql_nhanSW
                     VerticalAlignment = VerticalAlignment.Center
                 }
             });
+
             botRow.Children.Add(new Border
             {
                 Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E0040")),
@@ -142,7 +155,7 @@ namespace ql_nhanSW
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(12, 12, 12, 2),
                 Padding = new Thickness(12, 8, 12, 8),
-                MaxWidth = 220,
+                MaxWidth = 200,
                 Child = new TextBlock
                 {
                     Text = "Tôi đã nhận được tin nhắn của bạn. Chức năng AI đang được phát triển!",

@@ -7,12 +7,6 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24,20,24,24">
 
-            <!-- TITLE -->
-            <TextBlock Text="Tính toán Lương tháng 10/2023"
-                       Foreground="#E9D5FF" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"/>
-            <TextBlock Text="Quản lý, điều chỉnh và phê duyệt chi trả lương cho nhân sự toàn hệ thống. Mọi thay đổi sẽ được ghi nhật ký hệ thống."
-                       Foreground="#6B21A8" FontSize="12" Margin="0,0,0,20"/>
-
             <!-- MAIN ROW -->
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -135,8 +129,6 @@
                             </Grid>
 
                             <Rectangle Height="1" Fill="#2D0060" Margin="0,0,0,16"/>
-
-                            <!-- Tổng lương -->
                             <Grid Margin="0,0,0,16">
                                 <StackPanel>
                                     <TextBlock Text="Tổng lương thực nhận"
@@ -149,8 +141,6 @@
                                     <TextBlock Text="VND" Foreground="#7C3AED" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right"/>
                                 </StackPanel>
                             </Grid>
-
-                            <!-- Nút xác nhận -->
                             <Button Background="#7C3AED" BorderThickness="0"
                                     Cursor="Hand" HorizontalAlignment="Stretch" Padding="0"
                                     Margin="0,0,0,8">
@@ -175,32 +165,24 @@
                                        Foreground="#4C1D95" FontSize="10" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
-
                 </StackPanel>
 
                 <!-- CỘT PHẢI -->
                 <StackPanel Grid.Column="2">
-
-                    <!-- THỐNG KÊ -->
                     <Border Background="#4C1D95" BorderBrush="#7C3AED" BorderThickness="1"
                             CornerRadius="12" Padding="16" Margin="0,0,0,14">
                         <StackPanel>
                             <TextBlock Text="THỐNG KÊ CHI TRẢ THÁNG 10"
                                        Foreground="#E9D5FF" FontSize="10" FontWeight="Bold" Margin="0,0,0,14"/>
-
                             <TextBlock Text="Tổng quỹ lương:" Foreground="#C4B5FD" FontSize="12" Margin="0,0,0,4"/>
                             <TextBlock Text="4.2 Tỷ" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,12"/>
-
                             <TextBlock Text="Đã giải ngân:" Foreground="#C4B5FD" FontSize="12" Margin="0,0,0,4"/>
                             <TextBlock Text="1.8 Tỷ (42%)" Foreground="#4ADE80" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-
                             <Border Height="6" CornerRadius="3" Background="#3B0764">
                                 <Border HorizontalAlignment="Left" Width="100" CornerRadius="3" Height="6" Background="#4ADE80"/>
                             </Border>
                         </StackPanel>
                     </Border>
-
-                    <!-- GHI CHÚ NHANH -->
                     <Border Background="#0D0020" BorderBrush="#3B0764" BorderThickness="1"
                             CornerRadius="12" Padding="16">
                         <StackPanel>
@@ -209,21 +191,16 @@
                                 <TextBlock Text="Ghi chú nhanh"
                                            Foreground="#E9D5FF" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
-
-                            <!-- Note 1 -->
                             <Border Background="#1A0035" BorderBrush="#7C3AED" BorderThickness="0,0,0,3"
                                     CornerRadius="6" Padding="10" Margin="0,0,0,8">
                                 <TextBlock Text="Có 5 nhân viên mới cần cập nhật lương cơ bản."
                                            Foreground="#D8B4FE" FontSize="11" TextWrapping="Wrap"/>
                             </Border>
-
-                            <!-- Note 2 -->
                             <Border Background="#1A0035" BorderBrush="#FACC15" BorderThickness="0,0,0,3"
                                     CornerRadius="6" Padding="10" Margin="0,0,0,14">
                                 <TextBlock Text="Khấu trừ bảo hiểm thay đổi theo quy định mới từ 01/10."
                                            Foreground="#D8B4FE" FontSize="11" TextWrapping="Wrap"/>
                             </Border>
-
                             <TextBlock Text="THÊM GHI CHÚ" Foreground="#6B21A8" FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
                             <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10">
                                 <TextBlock Text="Nhập ghi chú cho bảng lương tháng này..."
@@ -231,7 +208,6 @@
                             </Border>
                         </StackPanel>
                     </Border>
-
                 </StackPanel>
             </Grid>
 
@@ -264,8 +240,6 @@
                             </StackPanel>
                         </Button>
                     </Grid>
-
-                    <!-- Table header -->
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

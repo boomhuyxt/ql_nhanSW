@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace ql_nhanSW
 {
-    /// <summary>
-    /// Interaction logic for TrangChu.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -28,7 +25,6 @@ namespace ql_nhanSW
 
         private void SetActiveButton(Button activeBtn)
         {
-            // Reset tất cả về mặc định
             BtnDashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0A0010"));
             BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
@@ -36,7 +32,6 @@ namespace ql_nhanSW
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
             BtnBaoCaoTK.Background = new SolidColorBrush(Colors.Transparent);
 
-            // Set button được click thành active
             activeBtn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E0040"));
             activeBtn.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C3AED"));
         }
@@ -90,7 +85,6 @@ namespace ql_nhanSW
 
         private void ChatInput_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
                 SendMessage();
         }
 

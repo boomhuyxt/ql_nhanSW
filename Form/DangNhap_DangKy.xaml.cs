@@ -11,13 +11,17 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ql_nhanSW.Form;
 
 namespace ql_nhanSW.Form
 {
 
     public partial class Window1 : Window
     {
+
+
         public Window1()
+
         {
             InitializeComponent();
         }
@@ -76,6 +80,7 @@ namespace ql_nhanSW.Form
             var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
             SignInPanel.BeginAnimation(OpacityProperty, fadeIn);
         }
+
     }
 
 }

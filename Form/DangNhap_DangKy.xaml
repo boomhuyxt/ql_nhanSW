@@ -23,7 +23,7 @@
         <Border x:Name="SignInPanel"
                 Visibility="Visible"
                 CornerRadius="16"
-                MouseDown="Border_MouseDown">
+                MouseDown="Border_MouseDown" HorizontalAlignment="Right" Width="835">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#0A0010" Offset="0"/>

@@ -15,7 +15,6 @@ using ql_nhanSW.BUS;
 
 namespace ql_nhanSW
 {
-
     public partial class MainWindow : Window
     {
         public MainWindow()

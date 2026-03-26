@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ql_nhanSW.Form
 {
-
     public partial class Window1 : Window
     {
         public Window1()
@@ -56,11 +47,6 @@ namespace ql_nhanSW.Form
             // Fade in LoadingOverlay
             var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
             LoadingOverlay.BeginAnimation(OpacityProperty, fadeIn);
-
-            // TODO: Sau này thêm logic kiểm tra đăng nhập ở đây
-            // var main = new TrangChu();
-            // main.Show();
-            // this.Close();
         }
 
         private void LogoutBtn_Click(object sender, RoutedEventArgs e)
@@ -77,5 +63,4 @@ namespace ql_nhanSW.Form
             SignInPanel.BeginAnimation(OpacityProperty, fadeIn);
         }
     }
-
 }

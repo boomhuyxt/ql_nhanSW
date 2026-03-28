@@ -132,7 +132,6 @@ namespace ql_nhanSW.Form
 
                 MessageBox.Show("Đăng ký thành công! Tài khoản của bạn đang chờ quản trị viên phê duyệt.");
 
-                // Quay lại màn hình đăng nhập
                 SwitchLogin_Click(null, null);
             }
             catch (Exception ex)

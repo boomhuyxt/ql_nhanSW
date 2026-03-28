@@ -14,12 +14,19 @@ namespace ql_nhanSW.Models
         public DbSet<LichSuCongTac> LichSuCongTac { get; set; }
         public DbSet<HopDongLaoDong> HopDongLaoDong { get; set; }
         public DbSet<NghiPhep> NghiPhep { get; set; }
+        public DbSet<VaiTro> VaiTros { get; set; }
+        public DbSet<TaiKhoanVaiTro> TaiKhoanVaiTros { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
                 @"Server=(localdb)\MSSQLLocalDB;Database=QLNhanSu;Trusted_Connection=True;MultipleActiveResultSets=true"
             );
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TaiKhoanVaiTro>()
+                .HasKey(tv => new { tv.MaTaiKhoan, tv.MaVaiTro });
         }
     }
 }

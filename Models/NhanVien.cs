@@ -31,5 +31,7 @@ namespace ql_nhanSW.Models
         public int? MaHopDong { get; set; }
 
         public int? MaPhongBan { get; set; }
+
+        public string? FaceVector { get; set; }
     }
 }

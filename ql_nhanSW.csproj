@@ -41,10 +41,6 @@
 
 	<!-- ================= FOLDERS ================= -->
 
-	<ItemGroup>
-		<Folder Include="data\" />
-	</ItemGroup>
-
 	<!-- ================= PACKAGES ================= -->
 
 	<ItemGroup>

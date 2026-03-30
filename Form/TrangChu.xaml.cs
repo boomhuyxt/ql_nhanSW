@@ -56,12 +56,14 @@ namespace ql_nhanSW
 
         private void BtnPheDuyet_Click(object sender, RoutedEventArgs e)
         {
+            if (!AuthorizationService.RequireAdmin()) return;
             SetActiveButton(BtnPheDuyet);
             //MainContent.Content = new UC_PheDuyet();
         }
 
         private void BtnCauHinhLuong_Click(object sender, RoutedEventArgs e)
         {
+            if (!AuthorizationService.RequireAdmin()) return;
             SetActiveButton(BtnCauHinhLuong);
             MainContent.Content = new UC_CauHinhLuong();
         }

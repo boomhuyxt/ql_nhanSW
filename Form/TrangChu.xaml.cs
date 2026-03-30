@@ -28,7 +28,7 @@ namespace ql_nhanSW
             BtnDashBoard.Background = new SolidColorBrush(Colors.Transparent);
             BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
-            BtnNhanSu.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            BtnNhanSu.BorderBrush = new SolidColorBrush(Colors.Transparent);            
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
             BtnCauHinhLuong.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnBaoCaoTK.Background = new SolidColorBrush(Colors.Transparent);
@@ -49,7 +49,7 @@ namespace ql_nhanSW
             SetActiveButton(BtnNhanSu);
             MainContent.Content = new UC_NhanSu();
         }
-
+        
         private void BtnCauHinhLuong_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnCauHinhLuong);
@@ -59,7 +59,12 @@ namespace ql_nhanSW
         private void BtnBaoCaoTK_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnBaoCaoTK);
-            // MainContent.Content = new UC_BaoCaoTK();
+            MainContent.Content = new UC_BCTK();
+        }
+
+        private void BtnToggleChat_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleChat();
         }
 
         // ===== CHAT PANEL =====

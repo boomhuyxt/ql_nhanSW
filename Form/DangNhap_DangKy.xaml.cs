@@ -40,7 +40,7 @@ namespace ql_nhanSW.Form
         {
             SignInPanel.Visibility = Visibility.Visible;
             SignUpPanel.Visibility = Visibility.Collapsed;
-            LoadingOverlay.Visibility = Visibility.Collapsed;
+            
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
@@ -51,22 +51,22 @@ namespace ql_nhanSW.Form
             await Task.Delay(400);
 
             SignInPanel.Visibility = Visibility.Collapsed;
+            
 
             // Fade in LoadingOverlay
             var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
 
-            // TODO: Sau này thêm logic kiểm tra đăng nhập ở đây
-            // var main = new TrangChu();
-            // main.Show();
-            // this.Close();
+
+           
         }
 
         private void LogoutBtn_Click(object sender, RoutedEventArgs e)
         {
             // Fade out LoadingOverlay
             var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
-            LoadingOverlay.BeginAnimation(OpacityProperty, fadeOut);
+            
 
+            
 
             // Fade in SignInPanel
             SignInPanel.Visibility = Visibility.Visible;

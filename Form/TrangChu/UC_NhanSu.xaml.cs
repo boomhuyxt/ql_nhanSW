@@ -11,10 +11,7 @@ using System.Windows.Threading;
 
 namespace ql_nhanSW.Form.TrangChu
 {
-<<<<<<< HEAD
 
-=======
->>>>>>> dev/logic2
     public partial class UC_NhanSu : UserControl
     {
         // Thêm dấu ? để chấp nhận giá trị null (Fix lỗi Nullability)

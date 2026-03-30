@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using Microsoft.EntityFrameworkCore;
 using ql_nhanSW.Models; // Đảm bảo đúng namespace của TaiKhoan và NhanVien
 
 namespace ql_nhanSW.Form

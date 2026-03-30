@@ -51,11 +51,9 @@ namespace ql_nhanSW.Form
             await Task.Delay(400);
 
             SignInPanel.Visibility = Visibility.Collapsed;
-            LoadingOverlay.Visibility = Visibility.Visible;
 
             // Fade in LoadingOverlay
             var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.4));
-            LoadingOverlay.BeginAnimation(OpacityProperty, fadeIn);
 
             // TODO: Sau này thêm logic kiểm tra đăng nhập ở đây
             // var main = new TrangChu();
@@ -69,7 +67,6 @@ namespace ql_nhanSW.Form
             var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
             LoadingOverlay.BeginAnimation(OpacityProperty, fadeOut);
 
-            LoadingOverlay.Visibility = Visibility.Collapsed;
 
             // Fade in SignInPanel
             SignInPanel.Visibility = Visibility.Visible;

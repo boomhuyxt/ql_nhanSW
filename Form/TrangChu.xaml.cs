@@ -29,8 +29,6 @@ namespace ql_nhanSW
             BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.BorderBrush = new SolidColorBrush(Colors.Transparent);
-            BtnPheDuyet.Background = new SolidColorBrush(Colors.Transparent);
-            BtnPheDuyet.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
             BtnCauHinhLuong.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnBaoCaoTK.Background = new SolidColorBrush(Colors.Transparent);
@@ -50,12 +48,6 @@ namespace ql_nhanSW
         {
             SetActiveButton(BtnNhanSu);
             MainContent.Content = new UC_NhanSu();
-        }
-
-        private void BtnPheDuyet_Click(object sender, RoutedEventArgs e)
-        {
-            SetActiveButton(BtnPheDuyet);
-            // MainContent.Content = new UC_PheDuyet();
         }
 
         private void BtnCauHinhLuong_Click(object sender, RoutedEventArgs e)

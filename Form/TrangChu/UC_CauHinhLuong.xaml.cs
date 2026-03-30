@@ -12,13 +12,7 @@ using System.Windows.Shapes;
 
 namespace ql_nhanSW.Form.TrangChu
 {
-    /// <summary>
-    /// Interaction logic for UC_CauHinhLuong.xaml
-    /// </summary>
-<<<<<<< HEAD
-    // Sửa dòng này
-=======
->>>>>>> 1e62d2d2c809548cda6a3be907015fff02af2728
+    
     public partial class UC_CauHinhLuong : UserControl
     {
         public UC_CauHinhLuong()

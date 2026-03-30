@@ -367,7 +367,7 @@
             <Button x:Name="BtnToggleChat" Click="BtnToggleChat_Click"
             Background="#7C3AED" BorderThickness="0"
             Width="52" Height="52"
-            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            HorizontalAlignment="Center" VerticalAlignment="Top"
             Cursor="Hand">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">

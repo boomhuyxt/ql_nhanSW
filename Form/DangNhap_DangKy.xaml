@@ -23,7 +23,7 @@
         <Border x:Name="SignInPanel"
                 Visibility="Visible"
                 CornerRadius="16"
-                MouseDown="Border_MouseDown">
+                MouseDown="Border_MouseDown" HorizontalAlignment="Right" Width="835">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#0A0010" Offset="0"/>
@@ -248,7 +248,7 @@
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
                     <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,12">
-                        <TextBox Background="Transparent" Foreground="#E9D5FF"
+                        <TextBox x:Name="TxtRegEmail" Background="Transparent" Foreground="#E9D5FF"
                                  CaretBrush="#A855F7" BorderThickness="0"
                                  Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -258,7 +258,7 @@
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
                     <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,12">
-                        <TextBox Background="Transparent" Foreground="#E9D5FF"
+                        <TextBox x:Name="TxtRegUsername" Background="Transparent" Foreground="#E9D5FF"
                                  CaretBrush="#A855F7" BorderThickness="0"
                                  Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -268,7 +268,7 @@
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
                     <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,12">
-                        <PasswordBox Background="Transparent" Foreground="#E9D5FF"
+                        <PasswordBox x:Name="TxtRegPassword" Background="Transparent" Foreground="#E9D5FF"
                                      CaretBrush="#A855F7" BorderThickness="0"
                                      Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -278,15 +278,15 @@
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
                     <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,18">
-                        <PasswordBox Background="Transparent" Foreground="#E9D5FF"
+                        <PasswordBox x:Name="TxtRegConfirmPassword" Background="Transparent" Foreground="#E9D5FF"
                                      CaretBrush="#A855F7" BorderThickness="0"
                                      Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
 
                     <!-- Nút đăng ký -->
-                    <Button Background="#7C3AED" BorderThickness="0"
+                    <Button x:Name="Register" Background="#7C3AED" BorderThickness="0"
                             Cursor="Hand" HorizontalAlignment="Stretch"
-                            Padding="0" Margin="0,0,0,10">
+                            Padding="0" Margin="0,0,0,10" Click="Register_Click_1">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}"

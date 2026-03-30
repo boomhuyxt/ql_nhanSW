@@ -6,5 +6,6 @@ namespace ql_nhanSW.BUS
 {
     class ChapCong
     {
+
     }
 }

@@ -23,9 +23,10 @@ namespace ql_nhanSW.Models
         public string AnhDaiDien { get; set; }
 
         public int? TrangThai { get; set; }
-
         public DateTime? NgayTao { get; set; }
-
         public DateTime? NgayCapNhat { get; set; }
+
+        // THÊM DÒNG NÀY ĐỂ SỬA LỖI:
+        public virtual ICollection<TaiKhoanVaiTro> TaiKhoanVaiTros { get; set; }
     }
 }

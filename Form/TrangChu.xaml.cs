@@ -15,9 +15,9 @@ using ql_nhanSW.BUS;
 
 namespace ql_nhanSW
 {
-    public partial class MainWindow : Window
+    public partial class TrangChu : Window
     {
-        public MainWindow()
+        public TrangChu()
         {
             InitializeComponent();
             MainContent.Content = new UC_DashBoard();

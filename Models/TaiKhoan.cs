@@ -27,6 +27,6 @@ namespace ql_nhanSW.Models
         public DateTime? NgayCapNhat { get; set; }
 
         // THÊM DÒNG NÀY ĐỂ SỬA LỖI:
-        public virtual ICollection<TaiKhoanVaiTro> TaiKhoanVaiTros { get; set; }
+        public virtual ICollection<TaiKhoanVaiTro> TaiKhoanVaiTro { get; set; }
     }
 }

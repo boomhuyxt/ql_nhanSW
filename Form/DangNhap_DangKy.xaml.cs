@@ -61,7 +61,7 @@ namespace ql_nhanSW.Form
                 if (user != null)
                 {
                     // 2. Lấy danh sách mã vai trò trực tiếp từ đối tượng user đã nạp
-                    var roles = user.TaiKhoanVaiTros
+                    var roles = user.TaiKhoanVaiTro
                         .Select(rv => rv.VaiTro.MaCode)
                         .ToList();
 

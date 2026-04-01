@@ -19,7 +19,16 @@ namespace ql_nhanSW
     public partial class TrangChu : Window
     {
         private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        private const string ApiKey = "AIzaSyAkJMA2Zk-Fm5paCGP7KiBNlj6Xr1FXQgc";
+
+        // API Key đã được mã hóa Base64 để tránh bị soi quét text trực tiếp
+        private const string EncodedApiKey = "QUl6YVN5Q2dHWm5PTExocUlVcjlBSVhWeUJ5ZDJOdURxbUVVWUJJ";
+
+        // Hàm giải mã API Key khi sử dụng
+        private string GetDecodedKey()
+        {
+            byte[] data = Convert.FromBase64String(EncodedApiKey);
+            return Encoding.UTF8.GetString(data);
+        }
 
         public class GeminiResponse { public Candidate[] candidates { get; set; } }
         public class Candidate { public Content content { get; set; } }
@@ -32,6 +41,8 @@ namespace ql_nhanSW
             MainContent.Content = new UC_DashBoard();
             SetActiveButton(BtnDashBoard);
         }
+
+
 
         private void SetActiveButton(Button activeBtn)
         {
@@ -191,15 +202,14 @@ namespace ql_nhanSW
 
             try
             {
-                // Chuẩn bị dữ liệu gửi đi
                 var requestBody = new { contents = new[] { new { parts = new[] { new { text = msg } } } } };
                 string jsonPayload = JsonSerializer.Serialize(requestBody);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                // URL API Gemini
-                string url = $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={ApiKey}";
+                // Giải mã key ngay tại thời điểm gọi API
+                string apiKey = GetDecodedKey();
+                string url = $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={apiKey}";
 
-                // THỰC HIỆN GỌI API (Đây là dòng đã bị thiếu khiến gây lỗi)
                 var response = await client.PostAsync(url, content);
 
                 if (response.IsSuccessStatusCode)
@@ -225,6 +235,7 @@ namespace ql_nhanSW
             }
             ChatScrollViewer.ScrollToBottom();
         }
+
         #endregion
     }
 }

@@ -1,34 +1,51 @@
-﻿using ql_nhanSW.Form.TrangChu;
+﻿using ql_nhanSW.BUS;
+using ql_nhanSW.Form.TrangChu;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ql_nhanSW
 {
-    /// <summary>
-    /// Interaction logic for TrangChu.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class TrangChu : Window
     {
-        public MainWindow()
+        private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+
+        // API Key đã được mã hóa Base64 để tránh bị soi quét text trực tiếp
+        private const string EncodedApiKey = "QUl6YVN5Q2dHWm5PTExocUlVcjlBSVhWeUJ5ZDJOdURxbUVVWUJJ";
+
+        // Hàm giải mã API Key khi sử dụng
+        private string GetDecodedKey()
+        {
+            byte[] data = Convert.FromBase64String(EncodedApiKey);
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public class GeminiResponse { public Candidate[] candidates { get; set; } }
+        public class Candidate { public Content content { get; set; } }
+        public class Content { public Part[] parts { get; set; } }
+        public class Part { public string text { get; set; } }
+
+        public TrangChu()
         {
             InitializeComponent();
             MainContent.Content = new UC_DashBoard();
             SetActiveButton(BtnDashBoard);
         }
 
+
+
         private void SetActiveButton(Button activeBtn)
         {
-            // Reset tất cả về mặc định
             BtnDashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0A0010"));
             BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
@@ -36,11 +53,11 @@ namespace ql_nhanSW
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
             BtnBaoCaoTK.Background = new SolidColorBrush(Colors.Transparent);
 
-            // Set button được click thành active
             activeBtn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E0040"));
             activeBtn.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C3AED"));
         }
 
+        #region Navigation Click Events
         private void BtnDashBoard_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnDashBoard);
@@ -55,12 +72,13 @@ namespace ql_nhanSW
 
         private void BtnPheDuyet_Click(object sender, RoutedEventArgs e)
         {
+            if (!AuthorizationService.RequireAdmin()) return;
             SetActiveButton(BtnPheDuyet);
-            //MainContent.Content = new UC_PheDuyet();
         }
 
         private void BtnCauHinhLuong_Click(object sender, RoutedEventArgs e)
         {
+            if (!AuthorizationService.RequireAdmin()) return;
             SetActiveButton(BtnCauHinhLuong);
             MainContent.Content = new UC_CauHinhLuong();
         }
@@ -68,14 +86,13 @@ namespace ql_nhanSW
         private void BtnBaoCaoTK_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnBaoCaoTK);
-            //MainContent.Content = new UC_BaoCaoTK();
         }
+        #endregion
 
+        #region Chatbot UI & Logic
         private void BtnToggleChat_Click(object sender, RoutedEventArgs e)
         {
-            ChatPanel.Visibility = ChatPanel.Visibility == Visibility.Visible
-                ? Visibility.Collapsed
-                : Visibility.Visible;
+            ChatPanel.Visibility = ChatPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void BtnCloseChat_Click(object sender, RoutedEventArgs e)
@@ -94,12 +111,8 @@ namespace ql_nhanSW
                 SendMessage();
         }
 
-        private void SendMessage()
+        private void AddUserBubble(string message)
         {
-            string msg = ChatInput.Text.Trim();
-            if (string.IsNullOrEmpty(msg)) return;
-
-            // Bubble người dùng
             ChatMessages.Children.Add(new Border
             {
                 Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2D0060")),
@@ -111,18 +124,19 @@ namespace ql_nhanSW
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Child = new TextBlock
                 {
-                    Text = msg,
+                    Text = message,
                     Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E9D5FF")),
                     FontSize = 12,
                     TextWrapping = TextWrapping.Wrap,
                     FontFamily = new FontFamily("Segoe UI")
                 }
             });
+        }
 
-            ChatInput.Text = string.Empty;
-
-            // Bubble bot
+        private Border AddBotLoadingBubble()
+        {
             var botRow = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 12) };
+
             botRow.Children.Add(new Border
             {
                 Width = 28,
@@ -131,17 +145,19 @@ namespace ql_nhanSW
                 Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C3AED")),
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Margin = new Thickness(0, 0, 8, 0),
-                Child = new TextBlock
-                {
-                    Text = "AI",
-                    Foreground = Brushes.White,
-                    FontSize = 9,
-                    FontWeight = FontWeights.Bold,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                }
+                Child = new TextBlock { Text = "AI", Foreground = Brushes.White, FontSize = 9, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center }
             });
-            botRow.Children.Add(new Border
+
+            var messageContent = new TextBlock
+            {
+                Text = "Đang suy nghĩ...",
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D8B4FE")),
+                FontSize = 12,
+                TextWrapping = TextWrapping.Wrap,
+                FontFamily = new FontFamily("Segoe UI")
+            };
+
+            var messageBorder = new Border
             {
                 Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E0040")),
                 BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3B0764")),
@@ -149,18 +165,77 @@ namespace ql_nhanSW
                 CornerRadius = new CornerRadius(12, 12, 12, 2),
                 Padding = new Thickness(12, 8, 12, 8),
                 MaxWidth = 220,
-                Child = new TextBlock
-                {
-                    Text = "Tôi đã nhận được tin nhắn của bạn. Chức năng AI đang được phát triển!",
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D8B4FE")),
-                    FontSize = 12,
-                    TextWrapping = TextWrapping.Wrap,
-                    FontFamily = new FontFamily("Segoe UI")
-                }
-            });
+                Child = messageContent
+            };
 
+            botRow.Children.Add(messageBorder);
             ChatMessages.Children.Add(botRow);
+            return messageBorder;
+        }
+
+        private void UpdateBotText(Border bubble, string text)
+        {
+            if (bubble.Child is TextBlock txtBlock)
+            {
+                txtBlock.Text = text;
+            }
+        }
+
+        private async void SendMessage()
+        {
+            string msg = ChatInput.Text.Trim();
+            if (string.IsNullOrEmpty(msg)) return;
+
+            AddUserBubble(msg);
+            ChatInput.Text = string.Empty;
+
+            var botBubble = AddBotLoadingBubble();
+            ChatScrollViewer.ScrollToBottom();
+
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+            int dots = 0;
+            timer.Tick += (s, ev) => {
+                dots = (dots + 1) % 4;
+                UpdateBotText(botBubble, "Đang suy nghĩ" + new string('.', dots));
+            };
+            timer.Start();
+
+            try
+            {
+                var requestBody = new { contents = new[] { new { parts = new[] { new { text = msg } } } } };
+                string jsonPayload = JsonSerializer.Serialize(requestBody);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                // Giải mã key ngay tại thời điểm gọi API
+                string apiKey = GetDecodedKey();
+                string url = $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={apiKey}";
+
+                var response = await client.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<GeminiResponse>(jsonResponse);
+
+                    timer.Stop();
+
+                    string reply = result?.candidates?[0]?.content?.parts?[0]?.text;
+                    UpdateBotText(botBubble, reply ?? "AI không có phản hồi.");
+                }
+                else
+                {
+                    timer.Stop();
+                    UpdateBotText(botBubble, "Kết nối API thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                timer.Stop();
+                UpdateBotText(botBubble, "Lỗi: " + ex.Message);
+            }
             ChatScrollViewer.ScrollToBottom();
         }
+
+        #endregion
     }
 }

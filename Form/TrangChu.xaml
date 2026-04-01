@@ -286,7 +286,7 @@
                                     <StackPanel>
                                         <TextBlock Text="Xin chào! 👋" Foreground="#E9D5FF"
                                            FontSize="12" FontWeight="Bold" Margin="0,0,0,4"/>
-                                        <TextBlock Text="Tôi là HR Assistant. Tôi có thể giúp bạn tra cứu thông tin nhân sự, lương thưởng và nhiều hơn nữa!"
+                                        <TextBlock Text="Tôi là HR Assistant. Tôi có thể giúp bạn tra cứu thông tin , gợi ý công việc"
                                            Foreground="#D8B4FE" FontSize="12"
                                            TextWrapping="Wrap" FontFamily="Segoe UI"/>
                                     </StackPanel>

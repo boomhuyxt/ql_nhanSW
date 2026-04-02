@@ -66,7 +66,7 @@
                         </Button.Template>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👥" FontSize="13" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Quản lý nhân sự" Foreground="#9D78CC" VerticalAlignment="Center"/>
+                            <TextBlock Text="Chấm công" Foreground="#9D78CC" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 

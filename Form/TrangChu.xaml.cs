@@ -21,8 +21,8 @@ namespace ql_nhanSW
         private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
 
         // API Key đã được mã hóa Base64 để tránh bị soi quét text trực tiếp
-        private const string EncodedApiKey = "QUl6YVN5Q2dHWm5PTExocUlVcjlBSVhWeUJ5ZDJOdURxbUVVWUJJ";
 
+        private const string EncodedApiKey = "QUl6YVN5Q2dHWm5PTExocUlVcjlBSVhWeUJ5ZDJOdURxbUVVWUJJ";
         // Hàm giải mã API Key khi sử dụng
         private string GetDecodedKey()
         {

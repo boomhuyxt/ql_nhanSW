@@ -153,19 +153,39 @@
                         </StackPanel>
                     </Button>
 
-                    <Border x:Name="UserProfileBorder" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10">
+                    <Button x:Name="BtnMoCapNhat" Click="BtnMoCapNhat_Click" 
+                            Background="#150028" BorderThickness="0" Padding="0" Cursor="Hand" Height="57">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="bgBorder" Background="{TemplateBinding Background}" 
+                                        BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10">
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bgBorder" Property="Background" Value="#2D0060"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+
                         <StackPanel Orientation="Horizontal">
-                            <Border Width="32" Height="32" CornerRadius="16"
-                                    Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1.5">
-                                <TextBlock x:Name="TxtUserAvatar" Text="?" Foreground="White" FontWeight="Bold" FontSize="13"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Width="32" Height="32" CornerRadius="16" Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1.5">
+                                <Grid>
+                                    <TextBlock x:Name="TxtUserAvatar" Text="?" Foreground="White" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image x:Name="ImgUserAvatar" Stretch="UniformToFill">
+                                        <Image.Clip>
+                                            <EllipseGeometry RadiusX="15" RadiusY="15" Center="14.5,14.5"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </Grid>
                             </Border>
                             <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
                                 <TextBlock x:Name="TxtUserName" Text="Đang tải..." Foreground="#E9D5FF" FontSize="12" FontWeight="SemiBold"/>
                                 <TextBlock x:Name="TxtUserRole" Text="Đang tải..." Foreground="#6B21A8" FontSize="10"/>
                             </StackPanel>
                         </StackPanel>
-                    </Border>
+                    </Button>
                 </StackPanel>
             </DockPanel>
         </Border>

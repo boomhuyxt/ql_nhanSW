@@ -13,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ql_nhanSW.share;
 
 namespace ql_nhanSW
 {
@@ -21,8 +22,8 @@ namespace ql_nhanSW
         private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
 
         // API Key đã được mã hóa Base64 để tránh bị soi quét text trực tiếp
-
         private const string EncodedApiKey = "QUl6YVN5Q2dHWm5PTExocUlVcjlBSVhWeUJ5ZDJOdURxbUVVWUJJ";
+
         // Hàm giải mã API Key khi sử dụng
         private string GetDecodedKey()
         {
@@ -38,11 +39,42 @@ namespace ql_nhanSW
         public TrangChu()
         {
             InitializeComponent();
+
+            // Gọi hàm hiển thị thông tin tài khoản ngay khi mở form
+            LoadUserInfo();
+
             MainContent.Content = new UC_DashBoard();
             SetActiveButton(BtnDashBoard);
         }
 
+        #region User Info Logic
+        // Hàm lấy dữ liệu từ SessionManager đẩy lên UI
+        private void LoadUserInfo()
+        {
+            if (SessionManager.CurrentUser != null)
+            {
+                // 1. Gán Tên đăng nhập
+                string username = SessionManager.CurrentUser.TenDangNhap;
+                TxtUserName.Text = username;
 
+                // 2. Cắt chữ cái đầu tiên làm Avatar
+                if (!string.IsNullOrEmpty(username))
+                {
+                    TxtUserAvatar.Text = username.Substring(0, 1).ToUpper();
+                }
+
+                // 3. Gán Vai trò
+                if (SessionManager.CurrentRoles != null && SessionManager.CurrentRoles.Any())
+                {
+                    TxtUserRole.Text = string.Join(", ", SessionManager.CurrentRoles);
+                }
+                else
+                {
+                    TxtUserRole.Text = "Chờ cấp quyền";
+                }
+            }
+        }
+        #endregion
 
         private void SetActiveButton(Button activeBtn)
         {
@@ -236,6 +268,26 @@ namespace ql_nhanSW
             ChatScrollViewer.ScrollToBottom();
         }
 
+        #endregion
+
+        #region Logout Logic
+        private void BtnDangXuat_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                // Xóa session người dùng hiện tại
+                ql_nhanSW.share.SessionManager.CurrentUser = null;
+                ql_nhanSW.share.SessionManager.CurrentRoles = null;
+
+                // Mở lại Form Đăng nhập
+                var loginWindow = new Form.Window1();
+                loginWindow.Show();
+
+                // Đóng form Trang chủ
+                this.Close();
+            }
+        }
         #endregion
     }
 }

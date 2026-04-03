@@ -55,11 +55,7 @@
                                                        Foreground="#6B21A8" FontSize="10" Margin="0,3,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
-                                    <Border HorizontalAlignment="Right" VerticalAlignment="Center"
-                                            Background="#052E16" BorderBrush="#14532D" BorderThickness="1"
-                                            CornerRadius="4" Padding="8,4">
-                                        <TextBlock Text="ĐANG HOẠT ĐỘNG" Foreground="#4ADE80" FontSize="10" FontWeight="Bold"/>
-                                    </Border>
+                                    
                                 </Grid>
                             </Border>
                         </StackPanel>

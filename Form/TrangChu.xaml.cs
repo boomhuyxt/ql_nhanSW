@@ -13,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ql_nhanSW.share;
 
 namespace ql_nhanSW
 {
@@ -38,12 +39,69 @@ namespace ql_nhanSW
         public TrangChu()
         {
             InitializeComponent();
+
+            // Gọi hàm hiển thị thông tin tài khoản ngay khi mở form
+            LoadUserInfo();
+
             MainContent.Content = new UC_DashBoard();
             SetActiveButton(BtnDashBoard);
         }
 
+        #region User Info Logic
+        // Hàm lấy dữ liệu từ SessionManager đẩy lên UI
+        private void LoadUserInfo()
+        {
+            if (SessionManager.CurrentUser != null)
+            {
+                // 1. Gán Tên đăng nhập
+                string username = SessionManager.CurrentUser.TenDangNhap;
+                TxtUserName.Text = username;
 
+                // 2. Xử lý Avatar (Chữ cái đầu HOẶC Ảnh đại diện)
+                if (!string.IsNullOrEmpty(username))
+                {
+                    TxtUserAvatar.Text = username.Substring(0, 1).ToUpper();
+                }
 
+                // Kiểm tra xem user có ảnh đại diện trong Database không
+                string duongDanAnh = SessionManager.CurrentUser.AnhDaiDien;
+
+                if (!string.IsNullOrEmpty(duongDanAnh) && System.IO.File.Exists(duongDanAnh))
+                {
+                    try
+                    {
+                        // Gắn ảnh vào giao diện
+                        ImgUserAvatar.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(duongDanAnh));
+                        // Ẩn cái chữ cái đi để không bị chồng chéo
+                        TxtUserAvatar.Visibility = Visibility.Collapsed;
+                    }
+                    catch
+                    {
+                        // Nếu file ảnh bị lỗi, ta vẫn hiện chữ cái mặc định
+                        TxtUserAvatar.Visibility = Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    // Nếu chưa có ảnh thì để rỗng và hiện chữ
+                    ImgUserAvatar.Source = null;
+                    TxtUserAvatar.Visibility = Visibility.Visible;
+                }
+
+                // 3. Gán Vai trò
+                if (SessionManager.CurrentRoles != null && SessionManager.CurrentRoles.Any())
+                {
+                    TxtUserRole.Text = string.Join(", ", SessionManager.CurrentRoles);
+                }
+                else
+                {
+                    TxtUserRole.Text = "Chờ cấp quyền";
+                }
+            }
+        }
+        #endregion
+
+        #region UI Helper Methods
         private void SetActiveButton(Button activeBtn)
         {
             BtnDashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0A0010"));
@@ -56,6 +114,7 @@ namespace ql_nhanSW
             activeBtn.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E0040"));
             activeBtn.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7C3AED"));
         }
+        #endregion
 
         #region Navigation Click Events
         private void BtnDashBoard_Click(object sender, RoutedEventArgs e)
@@ -86,6 +145,21 @@ namespace ql_nhanSW
         private void BtnBaoCaoTK_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnBaoCaoTK);
+        }
+
+        // --- Mở trang Cập nhật thông tin ---
+        private void BtnMoCapNhat_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Xóa hiệu ứng sáng màu của các nút trên menu trái
+            BtnDashBoard.Background = new SolidColorBrush(Colors.Transparent);
+            BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
+            BtnPheDuyet.Background = new SolidColorBrush(Colors.Transparent);
+            BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
+            BtnBaoCaoTK.Background = new SolidColorBrush(Colors.Transparent);
+
+            // 2. Gắn trang CapNhatThongTin vào khung giữa màn hình
+            MainContent.Content = new ql_nhanSW.Form.TrangChu.CapNhatThongTin();
         }
         #endregion
 
@@ -235,7 +309,26 @@ namespace ql_nhanSW
             }
             ChatScrollViewer.ScrollToBottom();
         }
+        #endregion
 
+        #region Logout Logic
+        private void BtnDangXuat_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                // Xóa session người dùng hiện tại
+                ql_nhanSW.share.SessionManager.CurrentUser = null;
+                ql_nhanSW.share.SessionManager.CurrentRoles = null;
+
+                // Mở lại Form Đăng nhập
+                var loginWindow = new Form.Window1();
+                loginWindow.Show();
+
+                // Đóng form Trang chủ
+                this.Close();
+            }
+        }
         #endregion
     }
 }

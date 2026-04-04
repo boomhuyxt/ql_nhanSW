@@ -14,11 +14,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!--LEFT TASK BAR-->
         <Border Grid.Column="0" Background="#0D0020"
                 BorderBrush="#6B21A8" BorderThickness="0,0,1,0">
             <DockPanel LastChildFill="False">
-                <!--LOGO-->
                 <Border DockPanel.Dock="Top" Padding="16,20,16,16"
                         BorderBrush="#3B0764" BorderThickness="0,0,0,1">
                     <StackPanel Orientation="Horizontal">
@@ -66,7 +64,7 @@
                         </Button.Template>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👥" FontSize="13" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Quản lý nhân sự" Foreground="#9D78CC" VerticalAlignment="Center"/>
+                            <TextBlock Text="Chấm công" Foreground="#9D78CC" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -144,38 +142,58 @@
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Bottom" Margin="10,0,10,16">
-                    <Button Background="Transparent" Foreground="#9D78CC"
+                    <Button x:Name="BtnDangXuat" Click="BtnDangXuat_Click"
+                            Background="Transparent" Foreground="#9D78CC"
                             BorderThickness="0" Padding="12,5"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                             Cursor="Hand" FontSize="13" Margin="0,0,0,8">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⚙" FontSize="14" Foreground="#9D78CC" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Cài đặt" FontSize="12" Foreground="#9D78CC" VerticalAlignment="Center"/>
+                            <TextBlock Text="🚪" FontSize="14" Foreground="#9D78CC" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Đăng xuất" FontSize="12" Foreground="#9D78CC" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10">
+
+                    <Button x:Name="BtnMoCapNhat" Click="BtnMoCapNhat_Click" 
+                            Background="#150028" BorderThickness="0" Padding="0" Cursor="Hand" Height="57">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="bgBorder" Background="{TemplateBinding Background}" 
+                                        BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10">
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bgBorder" Property="Background" Value="#2D0060"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+
                         <StackPanel Orientation="Horizontal">
-                            <Border Width="32" Height="32" CornerRadius="16"
-                                    Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1.5">
-                                <TextBlock Text="A" Foreground="White" FontWeight="Bold" FontSize="13"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Width="32" Height="32" CornerRadius="16" Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1.5">
+                                <Grid>
+                                    <TextBlock x:Name="TxtUserAvatar" Text="?" Foreground="White" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image x:Name="ImgUserAvatar" Stretch="UniformToFill">
+                                        <Image.Clip>
+                                            <EllipseGeometry RadiusX="15" RadiusY="15" Center="14.5,14.5"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </Grid>
                             </Border>
                             <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="Admin" Foreground="#E9D5FF" FontSize="12" FontWeight="SemiBold"/>
-                                <TextBlock Text="Quản trị hệ thống" Foreground="#6B21A8" FontSize="10"/>
+                                <TextBlock x:Name="TxtUserName" Text="Đang tải..." Foreground="#E9D5FF" FontSize="12" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="TxtUserRole" Text="Đang tải..." Foreground="#6B21A8" FontSize="10"/>
                             </StackPanel>
                         </StackPanel>
-                    </Border>
+                    </Button>
                 </StackPanel>
             </DockPanel>
         </Border>
         <ContentControl x:Name="MainContent" Grid.Column="1"/>
 
-        <!-- ===== CHATBOT ===== -->
         <Grid Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"
       Margin="0,0,24,24" Panel.ZIndex="99">
 
-            <!-- Chat Panel -->
             <Border x:Name="ChatPanel"
             Visibility="Collapsed"
             Background="#0D0020"
@@ -195,7 +213,6 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- HEADER -->
                     <Border Grid.Row="0" CornerRadius="16,16,0,0" Padding="16,14">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -205,7 +222,6 @@
                         </Border.Background>
                         <Grid>
                             <StackPanel Orientation="Horizontal">
-                                <!-- Avatar bot -->
                                 <Border Width="36" Height="36" CornerRadius="18"
                                 Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1.5"
                                 Margin="0,0,10,0">
@@ -243,7 +259,6 @@
                                 </StackPanel>
                             </StackPanel>
 
-                            <!-- Nút đóng -->
                             <Button x:Name="BtnCloseChat" Click="BtnCloseChat_Click"
                             Background="Transparent" BorderThickness="0"
                             HorizontalAlignment="Right" Cursor="Hand" Width="28" Height="28">
@@ -265,16 +280,13 @@
                         </Grid>
                     </Border>
 
-                    <!-- Đường kẻ phân cách -->
                     <Rectangle Grid.Row="0" Height="1" Fill="#2D0060"
                        VerticalAlignment="Bottom"/>
 
-                    <!-- MESSAGES -->
                     <ScrollViewer Grid.Row="1" x:Name="ChatScrollViewer"
                           VerticalScrollBarVisibility="Auto">
                         <StackPanel x:Name="ChatMessages" Margin="14,14,14,8">
 
-                            <!-- Tin nhắn mặc định bot -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                 <Border Width="28" Height="28" CornerRadius="14"
                                 Background="#7C3AED" VerticalAlignment="Bottom" Margin="0,0,8,0">
@@ -293,7 +305,6 @@
                                 </Border>
                             </StackPanel>
 
-                            <!-- Quick replies -->
                             <StackPanel Margin="36,0,0,12">
                                 <TextBlock Text="Gợi ý nhanh:" Foreground="#6B21A8"
                                    FontSize="10" Margin="0,0,0,6"/>
@@ -316,7 +327,6 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- INPUT -->
                     <Border Grid.Row="2" BorderBrush="#2D0060" BorderThickness="0,1,0,0"
                     CornerRadius="0,0,16,16" Background="#080015" Padding="12,10">
                         <Grid>
@@ -363,7 +373,6 @@
                 </Grid>
             </Border>
 
-            <!-- TOGGLE BUTTON -->
             <Button x:Name="BtnToggleChat" Click="BtnToggleChat_Click"
             Background="#7C3AED" BorderThickness="0"
             Width="52" Height="52"
@@ -384,7 +393,6 @@
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Button.Template>
-                <!-- Icon robot -->
                 <Viewbox Width="26" Height="26">
                     <Canvas Width="24" Height="24">
                         <Rectangle Canvas.Left="4" Canvas.Top="3" Width="16" Height="11"

@@ -50,7 +50,11 @@ namespace ql_nhanSW.Form.TrangChu
                     // Load ảnh đại diện nếu có
                     if (!string.IsNullOrEmpty(tk.AnhDaiDien) && File.Exists(tk.AnhDaiDien))
                     {
-                        imgAvatar.Source = new BitmapImage(new Uri(tk.AnhDaiDien));
+                        try
+                        {
+                            imgAvatar.Source = new BitmapImage(new Uri(tk.AnhDaiDien));
+                        }
+                        catch { /* Bỏ qua nếu ảnh lỗi */ }
                     }
                 }
 
@@ -84,7 +88,7 @@ namespace ql_nhanSW.Form.TrangChu
         }
 
         // =================================================================
-        // 3. HÀM LƯU CẬP NHẬT
+        // 3. HÀM LƯU CẬP NHẬT (ĐÃ SỬA LỖI ĐỂ AI CŨNG LƯU ĐƯỢC)
         // =================================================================
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
@@ -101,9 +105,10 @@ namespace ql_nhanSW.Form.TrangChu
                 var tk = _db.TaiKhoans.FirstOrDefault(t => t.MaTaiKhoan == maTK);
                 var nv = _db.NhanViens.FirstOrDefault(n => n.MaTaiKhoan == maTK);
 
-                if (tk != null && nv != null)
+                // Chỉ cần có tài khoản là được phép lưu (không ép buộc phải có hồ sơ NhanVien)
+                if (tk != null)
                 {
-                    // --- XỬ LÝ LƯU ẢNH VÀO C:\AvataNhanSu ---
+                    // --- 3.1. XỬ LÝ LƯU ẢNH VÀO C:\AvataNhanSu ---
                     if (!string.IsNullOrEmpty(_duongDanAnhMoi))
                     {
                         string thuMucLuu = @"C:\AvataNhanSu";
@@ -128,22 +133,29 @@ namespace ql_nhanSW.Form.TrangChu
                         tk.AnhDaiDien = duongDanLuu;
                     }
 
-                    // --- CẬP NHẬT THÔNG TIN BẢNG TaiKhoan ---
+                    // --- 3.2. CẬP NHẬT THÔNG TIN BẢNG TaiKhoan ---
                     tk.SoDienThoai = txtSoDienThoai.Text.Trim();
                     tk.NgayCapNhat = DateTime.Now;
 
-                    // --- CẬP NHẬT THÔNG TIN BẢNG NhanVien ---
-                    nv.GioiTinh = (rdoNam.IsChecked == true) ? "Nam" : "Nữ";
-                    nv.NgaySinh = dpNgaySinh.SelectedDate;
-                    nv.DiaChi = txtDiaChi.Text.Trim();
+                    // --- 3.3. CẬP NHẬT THÔNG TIN BẢNG NhanVien (NẾU TÀI KHOẢN ĐÓ ĐÃ CÓ HỒ SƠ) ---
+                    if (nv != null)
+                    {
+                        nv.GioiTinh = (rdoNam.IsChecked == true) ? "Nam" : "Nữ";
+                        nv.NgaySinh = dpNgaySinh.SelectedDate;
+                        nv.DiaChi = txtDiaChi.Text.Trim();
+                    }
 
                     // --- LƯU XUỐNG DATABASE ---
                     _db.SaveChanges();
 
-                    // Cập nhật lại biến toàn cục để trên góc màn hình thay đổi theo (nếu có)
+                    // Cập nhật lại biến toàn cục Session
                     SessionManager.CurrentUser = tk;
 
                     MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy thông tin tài khoản trong hệ thống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)

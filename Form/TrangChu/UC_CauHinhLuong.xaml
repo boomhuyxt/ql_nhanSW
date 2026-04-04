@@ -5,13 +5,11 @@
              FontFamily="Segoe UI">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24,20,24,24">
-            <!-- TITLE -->
             <TextBlock Text="Tính toán Lương tháng 10/2023"
                        Foreground="#E9D5FF" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"/>
             <TextBlock Text="Quản lý, điều chỉnh và phê duyệt chi trả lương cho nhân sự toàn hệ thống. Mọi thay đổi sẽ được ghi nhật ký hệ thống."
                        Foreground="#6B21A8" FontSize="12" Margin="0,0,0,20"/>
 
-            <!-- MAIN ROW -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -19,9 +17,7 @@
                     <ColumnDefinition Width="240"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- CỘT TRÁI -->
                 <StackPanel Grid.Column="0">
-                    <!-- CHỌN NHÂN VIÊN -->
                     <Border Background="#0D0020" BorderBrush="#3B0764" BorderThickness="1"
                             CornerRadius="12" Padding="16" Margin="0,0,0,14">
                         <StackPanel>
@@ -31,7 +27,6 @@
                                            Foreground="#E9D5FF" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <!-- ComboBox bọc trong Border -->
                             <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
                                     CornerRadius="8" Margin="0,0,0,14">
                                 <ComboBox x:Name="cmbNhanVien"
@@ -40,7 +35,6 @@
                                           SelectionChanged="cmbNhanVien_SelectionChanged"/>
                             </Border>
 
-                            <!-- Nhân viên được chọn -->
                             <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="10" Padding="12">
                                 <Grid>
                                     <StackPanel Orientation="Horizontal">
@@ -55,13 +49,11 @@
                                                        Foreground="#6B21A8" FontSize="10" Margin="0,3,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
-                                    
                                 </Grid>
                             </Border>
                         </StackPanel>
                     </Border>
 
-                    <!-- CHI TIẾT CÁC KHOẢN + INPUT -->
                     <Border Background="#0D0020" BorderBrush="#3B0764" BorderThickness="1"
                             CornerRadius="12" Padding="16">
                         <StackPanel>
@@ -71,10 +63,9 @@
                                            Foreground="#E9D5FF" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <!-- Input fields - mỗi TextBox bọc trong Border -->
                             <Grid Margin="0,0,0,16">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
@@ -83,45 +74,48 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="Tháng" Grid.Row="0" Grid.Column="0" Foreground="#6B21A8" FontSize="12" Margin="0,8,12,8"/>
-                                <Border Grid.Row="0" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6">
-                                    <TextBox x:Name="txtThang" Text="10" Background="Transparent" Foreground="#E9D5FF" BorderBrush="Transparent" Padding="8"/>
+                                <TextBlock Text="Tháng" Grid.Row="0" Grid.Column="0" Foreground="#6B21A8" FontSize="12" VerticalAlignment="Center"/>
+                                <Border Grid.Row="0" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6" Margin="0,0,0,10">
+                                    <TextBox x:Name="txtThang" Text="10" Background="Transparent" Foreground="#E9D5FF" BorderThickness="0" Padding="8,8"/>
                                 </Border>
 
-                                <TextBlock Text="Năm" Grid.Row="1" Grid.Column="0" Foreground="#6B21A8" FontSize="12" Margin="0,8,12,8"/>
-                                <Border Grid.Row="1" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6">
-                                    <TextBox x:Name="txtNam" Text="2023" Background="Transparent" Foreground="#E9D5FF" BorderBrush="Transparent" Padding="8"/>
+                                <TextBlock Text="Năm" Grid.Row="1" Grid.Column="0" Foreground="#6B21A8" FontSize="12" VerticalAlignment="Center"/>
+                                <Border Grid.Row="1" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6" Margin="0,0,0,10">
+                                    <TextBox x:Name="txtNam" Text="2023" Background="Transparent" Foreground="#E9D5FF" BorderThickness="0" Padding="8,8"/>
                                 </Border>
 
-                                <TextBlock Text="Lương cơ bản" Grid.Row="2" Grid.Column="0" Foreground="#6B21A8" FontSize="12" Margin="0,8,12,8"/>
-                                <Border Grid.Row="2" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6">
-                                    <TextBox x:Name="txtLuongCoBan" Text="25000000" Background="Transparent" Foreground="#E9D5FF" BorderBrush="Transparent" Padding="8"/>
+                                <TextBlock Text="Lương cơ bản" Grid.Row="2" Grid.Column="0" Foreground="#6B21A8" FontSize="12" VerticalAlignment="Center"/>
+                                <Border Grid.Row="2" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6" Margin="0,0,0,10">
+                                    <TextBox x:Name="txtLuongCoBan" Text="25000000" Background="Transparent" Foreground="#E9D5FF" BorderThickness="0" Padding="8,8"/>
                                 </Border>
 
-                                <TextBlock Text="Thưởng / KPI" Grid.Row="3" Grid.Column="0" Foreground="#6B21A8" FontSize="12" Margin="0,8,12,8"/>
-                                <Border Grid.Row="3" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6">
-                                    <TextBox x:Name="txtThuong" Text="2500000" Background="Transparent" Foreground="#E9D5FF" BorderBrush="Transparent" Padding="8"/>
+                                <TextBlock Text="Thưởng / KPI" Grid.Row="3" Grid.Column="0" Foreground="#6B21A8" FontSize="12" VerticalAlignment="Center"/>
+                                <Border Grid.Row="3" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6" Margin="0,0,0,10">
+                                    <TextBox x:Name="txtThuong" Text="2500000" Background="Transparent" Foreground="#E9D5FF" BorderThickness="0" Padding="8,8"/>
                                 </Border>
 
-                                <TextBlock Text="Số ngày công" Grid.Row="4" Grid.Column="0" Foreground="#6B21A8" FontSize="12" Margin="0,8,12,8"/>
-                                <Border Grid.Row="4" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6">
-                                    <TextBox x:Name="txtSoNgayCong" Text="26" Background="Transparent" Foreground="#E9D5FF" BorderBrush="Transparent" Padding="8"/>
+                                <TextBlock Text="Khấu trừ" Grid.Row="4" Grid.Column="0" Foreground="#6B21A8" FontSize="12" VerticalAlignment="Center"/>
+                                <Border Grid.Row="4" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6" Margin="0,0,0,10">
+                                    <TextBox x:Name="txtKhauTru" Text="0" Background="Transparent" Foreground="#E9D5FF" BorderThickness="0" Padding="8,8"/>
+                                </Border>
+
+                                <TextBlock Text="Số ngày công" Grid.Row="5" Grid.Column="0" Foreground="#6B21A8" FontSize="12" VerticalAlignment="Center"/>
+                                <Border Grid.Row="5" Grid.Column="1" Background="#150028" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="6">
+                                    <TextBox x:Name="txtSoNgayCong" Text="26" Background="Transparent" Foreground="#E9D5FF" BorderThickness="0" Padding="8,8"/>
                                 </Border>
                             </Grid>
+
                             <Button x:Name="btnTinhLuong" Content="🔢 Tính Lương"
                                     Background="#7C3AED" Foreground="White" FontWeight="SemiBold"
                                     Padding="20,10"
                                     Click="btnTinhLuong_Click" Height="43"/>
 
-                            <!-- Nút Tính Lương -->
-
-                            <!-- Phần kết quả (giữ nguyên) -->
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <StackPanel Orientation="Horizontal" Margin="0,16,0,16">
                                 <TextBlock Text="⚡" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Chi tiết các khoản"
-                                           Foreground="#E9D5FF" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Text="Chi tiết các khoản" Foreground="#E9D5FF" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <Grid Margin="0,0,0,16">
@@ -154,21 +148,19 @@
 
                             <Rectangle Height="1" Fill="#2D0060" Margin="0,0,0,16"/>
 
-                            <!-- Tổng lương -->
                             <Grid>
                                 <StackPanel>
                                     <TextBlock Text="Tổng lương thực nhận"
                                                Foreground="#E9D5FF" FontSize="16" FontWeight="Bold" Margin="0,0,0,4"/>
-                                    <TextBlock Text="Sau khi đã tính toán các khoản thưởng và khấu trừ thuế tự động."
+                                    <TextBlock Text="Sau khi đã tính toán các khoản thưởng và khấu trừ thuế."
                                                Foreground="#6B21A8" FontSize="11"/>
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <TextBlock x:Name="tbTongLuong" Text="26,300,000" Foreground="#A855F7" FontSize="24" FontWeight="Bold" HorizontalAlignment="Right"/>
-                                    <TextBlock Text="VND" Foreground="#7C3AED" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                    <TextBlock Text="VND" Foreground="#7C3AED" FontSize="14" FontWeight="Bold" Margin="4,0,0,3" VerticalAlignment="Bottom"/>
                                 </StackPanel>
                             </Grid>
 
-                            <!-- Nút Xác nhận & Xuất lương -->
                             <Button Background="#7C3AED" BorderThickness="0"
                                     Cursor="Hand" HorizontalAlignment="Stretch" Padding="0"
                                     Margin="0,20,0,8" Click="btnXacNhanXuatLuong_Click">
@@ -192,10 +184,9 @@
                         </StackPanel>
                     </Border>
                 </StackPanel>
-                <!-- CỘT PHẢI -->
+
                 <StackPanel Grid.Column="2">
 
-                    <!-- THỐNG KÊ -->
                     <Border Background="#4C1D95" BorderBrush="#7C3AED" BorderThickness="1"
                             CornerRadius="12" Padding="16" Margin="0,0,0,14">
                         <StackPanel>
@@ -214,7 +205,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- GHI CHÚ NHANH -->
                     <Border Background="#0D0020" BorderBrush="#3B0764" BorderThickness="1"
                             CornerRadius="12" Padding="16">
                         <StackPanel>
@@ -224,14 +214,12 @@
                                            Foreground="#E9D5FF" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <!-- Note 1 -->
                             <Border Background="#1A0035" BorderBrush="#7C3AED" BorderThickness="0,0,0,3"
                                     CornerRadius="6" Padding="10" Margin="0,0,0,8">
                                 <TextBlock Text="Có 5 nhân viên mới cần cập nhật lương cơ bản."
                                            Foreground="#D8B4FE" FontSize="11" TextWrapping="Wrap"/>
                             </Border>
 
-                            <!-- Note 2 -->
                             <Border Background="#1A0035" BorderBrush="#FACC15" BorderThickness="0,0,0,3"
                                     CornerRadius="6" Padding="10" Margin="0,0,0,14">
                                 <TextBlock Text="Khấu trừ bảo hiểm thay đổi theo quy định mới từ 01/10."
@@ -249,7 +237,6 @@
                 </StackPanel>
             </Grid>
 
-            <!-- LỊCH SỬ XUẤT LƯƠNG -->
             <Border Background="#0D0020" BorderBrush="#3B0764" BorderThickness="1"
                     CornerRadius="12" Padding="16" Margin="0,14,0,0">
                 <StackPanel>
@@ -279,7 +266,6 @@
                         </Button>
                     </Grid>
 
-                    <!-- Table header -->
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -296,7 +282,6 @@
                     </Grid>
                     <Rectangle Height="1" Fill="#2D0060" Margin="0,0,0,10"/>
 
-                    <!-- Row 1 -->
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -325,7 +310,6 @@
                         </Border>
                     </Grid>
 
-                    <!-- Row 2 -->
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -354,7 +338,6 @@
                         </Border>
                     </Grid>
 
-                    <!-- Row 3 -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

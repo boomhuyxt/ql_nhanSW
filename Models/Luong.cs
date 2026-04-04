@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ql_nhanSW.Models
@@ -9,8 +10,10 @@ namespace ql_nhanSW.Models
     {
         [Key]
         public int MaLuong { get; set; }
-        public int MaNhanVien { get; set; }           // ← THÊM DÒNG NÀY
-        public NhanVien NhanVien { get; set; }
+        public int MaNhanVien { get; set; }          
+        
+        [ForeignKey("MaNhanVien")]
+        public virtual NhanVien NhanVien { get; set; }
         public int Thang { get; set; }
         public int Nam { get; set; }
         public decimal LuongCoBan { get; set; }

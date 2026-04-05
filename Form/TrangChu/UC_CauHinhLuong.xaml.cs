@@ -3,13 +3,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ql_nhanSW.Models;
-// using ql_nhanSW.BUS; // Không cần dùng file BUS cũ nữa vì tính thẳng ở giao diện
+using ql_nhanSW.BUS; // Cần thiết để gọi TinhLuongService
 
 namespace ql_nhanSW.Form.TrangChu
 {
     public partial class UC_CauHinhLuong : UserControl
     {
         private readonly AppDbContext _db = new AppDbContext();
+        private readonly TinhLuongService _tinhLuongBUS = new TinhLuongService(); // Khởi tạo Service
 
         private NhanVien _nhanVienHienTai;
         private Luong _luongTamThoi;
@@ -19,30 +20,26 @@ namespace ql_nhanSW.Form.TrangChu
             InitializeComponent();
             LoadComboNhanVien();
 
-            // Set mặc định là tháng/năm hiện tại
             txtThang.Text = DateTime.Now.Month.ToString();
             txtNam.Text = DateTime.Now.Year.ToString();
         }
 
-        // ==========================================
-        // 1. TẢI DANH SÁCH NHÂN VIÊN VÀO COMBOBOX
-        // ==========================================
+        // 1. Tải danh sách nhân viên với đầy đủ thông tin: Họ tên, Giới tính, Ngày sinh
         private void LoadComboNhanVien()
         {
             var ds = _db.NhanViens.Select(nv => new
             {
                 MaNhanVien = nv.MaNhanVien,
-                HoTen = nv.HoTen ?? "Không tên"
+                HoTen = nv.HoTen ?? "Không tên",
+                GioiTinh = nv.GioiTinh ?? "N/A",
+                NgaySinh = nv.NgaySinh // Dùng để hiển thị trong Template của XAML
             }).ToList();
 
             cmbNhanVien.ItemsSource = ds;
-            cmbNhanVien.DisplayMemberPath = "HoTen";
             cmbNhanVien.SelectedValuePath = "MaNhanVien";
         }
 
-        // ==========================================
-        // 2. KHI CHỌN NHÂN VIÊN
-        // ==========================================
+        // 2. Khi chọn nhân viên từ danh sách
         private void cmbNhanVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbNhanVien.SelectedValue is int maNV)
@@ -51,105 +48,98 @@ namespace ql_nhanSW.Form.TrangChu
 
                 if (_nhanVienHienTai != null)
                 {
-                    txtHoTen.Text = _nhanVienHienTai.HoTen ?? "Không tên";
-                    txtMaNV.Text = $"MNV: NV{_nhanVienHienTai.MaNhanVien:D3}";
+                    txtHoTen.Text = _nhanVienHienTai.HoTen;
+                    txtMaNV.Text = $"MNV: NV{_nhanVienHienTai.MaNhanVien:D3} • {_nhanVienHienTai.GioiTinh}";
                 }
             }
         }
 
-        // ==========================================
-        // 3. TÍNH LƯƠNG TRỰC TIẾP TỪ GIAO DIỆN
-        // ==========================================
+        // 3. Áp dụng thuật toán tính lương từ TinhLuong.cs
         private void btnTinhLuong_Click(object sender, RoutedEventArgs e)
         {
             if (_nhanVienHienTai == null)
             {
-                MessageBox.Show("Vui lòng chọn nhân viên cần tính lương!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng chọn nhân viên!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             try
             {
-                // Dùng Replace(",", "") để chống lỗi crash nếu người dùng nhập số có dấu phẩy (VD: 25,000,000)
+                // Lấy dữ liệu từ giao diện
                 int thang = int.Parse(txtThang.Text.Trim());
                 int nam = int.Parse(txtNam.Text.Trim());
                 decimal luongCoBan = decimal.Parse(txtLuongCoBan.Text.Replace(",", "").Trim());
                 decimal thuong = string.IsNullOrEmpty(txtThuong.Text) ? 0 : decimal.Parse(txtThuong.Text.Replace(",", "").Trim());
-                decimal khauTru = string.IsNullOrEmpty(txtKhauTru.Text) ? 0 : decimal.Parse(txtKhauTru.Text.Replace(",", "").Trim());
                 int soNgayCong = string.IsNullOrEmpty(txtSoNgayCong.Text) ? 26 : int.Parse(txtSoNgayCong.Text.Trim());
 
-                // Tính toán: Lương thực tế = (Lương cơ bản / 26) * số ngày công
-                decimal luongTheoNgay = (luongCoBan / 26) * soNgayCong;
-                decimal tongThucNhan = luongTheoNgay + thuong - khauTru;
+                // GỌI THUẬT TOÁN TỪ BUS
+                // Thuật toán này tự động trừ 10.5% bảo hiểm và 10% thuế
+                _luongTamThoi = _tinhLuongBUS.TinhVaTaoLuong(
+                    _nhanVienHienTai.MaNhanVien,
+                    thang,
+                    nam,
+                    luongCoBan,
+                    thuong,
+                    soNgayCong
+                );
 
-                // Lưu tạm vào biến _luongTamThoi để chuẩn bị đưa vào Database
-                _luongTamThoi = new Luong
-                {
-                    MaNhanVien = _nhanVienHienTai.MaNhanVien,
-                    Thang = thang,
-                    Nam = nam,
-                    LuongCoBan = luongCoBan,
-                    Thuong = thuong,
-                    KhauTru = khauTru,
-                    TongLuong = Math.Round(tongThucNhan, 0)
-                };
-
-                // Đẩy kết quả hiển thị xuống các ô bên dưới
+                // Cập nhật hiển thị kết quả lên giao diện
                 tbLuongCoBan.Text = _luongTamThoi.LuongCoBan.ToString("N0");
                 tbThuong.Text = _luongTamThoi.Thuong.ToString("N0");
-                tbKhauTru.Text = _luongTamThoi.KhauTru.ToString("N0");
+                tbKhauTru.Text = _luongTamThoi.KhauTru.ToString("N0"); // Hiển thị số tiền thuế + bảo hiểm đã trừ
                 tbTongLuong.Text = _luongTamThoi.TongLuong.ToString("N0");
+
+                // Hiển thị thông tin khấu trừ vào ô nhập (để người dùng biết đã trừ bao nhiêu)
+                txtKhauTru.Text = _luongTamThoi.KhauTru.ToString("N0");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi nhập liệu, vui lòng chỉ nhập số hợp lệ: " + ex.Message, "Lỗi định dạng", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Dữ liệu nhập không hợp lệ: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // ==========================================
-        // 4. LƯU BẢN LƯƠNG VÀO DATABASE
-        // ==========================================
+        // 4. Xác nhận và lưu vào Database
+        // 4. Xác nhận và lưu vào Database
         private void btnXacNhanXuatLuong_Click(object sender, RoutedEventArgs e)
         {
-            if (_luongTamThoi == null)
-            {
-                MessageBox.Show("Vui lòng ấn nút 'Tính lương' trước khi Xác nhận xuất lương!", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            if (_luongTamThoi == null) return;
 
             try
             {
-                // Kiểm tra xem nhân viên này tháng/năm đó đã tính lương chưa
-                var luongCu = _db.Luongs.FirstOrDefault(l => l.MaNhanVien == _luongTamThoi.MaNhanVien
-                                                          && l.Thang == _luongTamThoi.Thang
-                                                          && l.Nam == _luongTamThoi.Nam);
+                var luongTonTai = _db.Luongs.FirstOrDefault(l => l.MaNhanVien == _luongTamThoi.MaNhanVien
+                                                              && l.Thang == _luongTamThoi.Thang
+                                                              && l.Nam == _luongTamThoi.Nam);
 
-                if (luongCu != null)
+                if (luongTonTai != null)
                 {
-                    // NẾU ĐÃ CÓ LƯƠNG -> CẬP NHẬT GHI ĐÈ LẠI
-                    luongCu.LuongCoBan = _luongTamThoi.LuongCoBan;
-                    luongCu.Thuong = _luongTamThoi.Thuong;
-                    luongCu.KhauTru = _luongTamThoi.KhauTru;
-                    luongCu.TongLuong = _luongTamThoi.TongLuong;
-
-                    MessageBox.Show($"✅ Đã cập nhật lại bảng lương tháng {_luongTamThoi.Thang}/{_luongTamThoi.Nam} cho {_nhanVienHienTai?.HoTen} thành công!",
-                                    "Cập nhật thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    luongTonTai.LuongCoBan = _luongTamThoi.LuongCoBan;
+                    luongTonTai.Thuong = _luongTamThoi.Thuong;
+                    luongTonTai.KhauTru = _luongTamThoi.KhauTru;
+                    luongTonTai.TongLuong = _luongTamThoi.TongLuong;
+                    _db.Entry(luongTonTai).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 }
                 else
                 {
-                    // NẾU CHƯA CÓ LƯƠNG -> THÊM DÒNG MỚI
-                    _db.Luongs.Add(_luongTamThoi);
-
-                    MessageBox.Show($"✅ Xuất lương mới thành công cho {_nhanVienHienTai?.HoTen}!\nTổng thực nhận: {_luongTamThoi.TongLuong:N0} VNĐ",
-                                    "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Tạo mới và ép kiểu tường minh ID
+                    var luongMoi = new Luong
+                    {
+                        MaNhanVien = _nhanVienHienTai.MaNhanVien, // Lấy trực tiếp từ nhân viên đang chọn
+                        Thang = _luongTamThoi.Thang,
+                        Nam = _luongTamThoi.Nam,
+                        LuongCoBan = _luongTamThoi.LuongCoBan,
+                        Thuong = _luongTamThoi.Thuong,
+                        KhauTru = _luongTamThoi.KhauTru,
+                        TongLuong = _luongTamThoi.TongLuong
+                    };
+                    _db.Luongs.Add(luongMoi);
                 }
 
-                // LƯU XUỐNG CƠ SỞ DỮ LIỆU
                 _db.SaveChanges();
+                MessageBox.Show("✅ Đã lưu lương thành công!", "Thông báo");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi lưu Database: " + ex.Message, "Lỗi Server", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi: " + (ex.InnerException?.Message ?? ex.Message));
             }
         }
     }

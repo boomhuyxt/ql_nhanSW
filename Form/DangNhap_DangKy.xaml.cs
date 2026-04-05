@@ -43,47 +43,37 @@ namespace ql_nhanSW.Form
         {
             try
             {
-                string username = TxtUsername.Text.Trim();
+                // Lấy Email từ ô nhập liệu mới (TxtEmail)
+                string email = TxtEmail.Text.Trim();
                 string password = TxtPassword.Password;
 
-                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // 1. Lấy tài khoản và nạp luôn danh sách VaiTro để tránh lỗi Lazy Loading
+                // Tìm tài khoản bằng Email thay vì TenDangNhap
                 var user = _db.TaiKhoans
                     .Include(t => t.TaiKhoanVaiTro)
                         .ThenInclude(rv => rv.VaiTro)
-                    .FirstOrDefault(u => u.TenDangNhap == username && u.MatKhauHash == password);
+                    .FirstOrDefault(u => u.Email == email && u.MatKhauHash == password);
 
                 if (user != null)
                 {
-                    // 2. Lấy danh sách mã vai trò trực tiếp từ đối tượng user đã nạp
-                    var roles = user.TaiKhoanVaiTro
-                        .Select(rv => rv.VaiTro.MaCode)
-                        .ToList();
-
-                    // 3. Kiểm tra sự tồn tại của vai trò
-                    bool hasRoleAssignment = roles.Any();
-
-                    // Lưu vào Session
+                    // ... (Giữ nguyên các logic phân quyền và chuyển trang phía sau)
+                    var roles = user.TaiKhoanVaiTro.Select(rv => rv.VaiTro.MaCode).ToList();
                     SessionManager.CurrentUser = user;
                     SessionManager.CurrentRoles = roles;
 
-                    // 4. KIỂM TRA ĐIỀU KIỆN (Sửa logic TrangThai để linh hoạt hơn)
-                    // Nếu bạn muốn tài khoản admin (TrangThai = 1) vào thẳng, hãy dùng >= 1 hoặc != 0
-                    if (user.TrangThai.GetValueOrDefault() != 0 && hasRoleAssignment)
+                    if (user.TrangThai.GetValueOrDefault() != 0 && roles.Any())
                     {
-                        // VÀO TRANG CHỦ
                         var main = new ql_nhanSW.TrangChu();
                         main.Show();
                         this.Close();
                     }
                     else
                     {
-                        // VÀO MÀN HÌNH CHỜ (Nếu TrangThai = 0 hoặc chưa có Role)
                         var loadingWindow = new ql_nhanSW.Form.LoadingOverlay();
                         loadingWindow.Show();
                         this.Close();
@@ -91,7 +81,7 @@ namespace ql_nhanSW.Form
                 }
                 else
                 {
-                    MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Email hoặc mật khẩu không chính xác!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     TxtPassword.Clear();
                 }
             }

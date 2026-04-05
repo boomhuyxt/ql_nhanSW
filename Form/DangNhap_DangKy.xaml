@@ -92,15 +92,15 @@
                                        HorizontalAlignment="Center" Margin="0,0,0,22"/>
 
                             <!-- Username -->
-                            <TextBlock Text="TÊN ĐĂNG NHẬP" Foreground="#6B21A8"
-                                       FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
+                            <TextBlock Text="EMAIL" Foreground="#6B21A8"
+           FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
                             <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
-                                    CornerRadius="8" Margin="0,0,0,14">
-                                <TextBox x:Name="TxtUsername"
-                                         Background="Transparent"
-                                         Foreground="#E9D5FF" CaretBrush="#A855F7"
-                                         BorderThickness="0" Padding="12,9"
-                                         FontSize="13" FontFamily="Segoe UI"/>
+        CornerRadius="8" Margin="0,0,0,14">
+                                <TextBox x:Name="TxtEmail"
+             Background="Transparent"
+             Foreground="#E9D5FF" CaretBrush="#A855F7"
+             BorderThickness="0" Padding="12,9"
+             FontSize="13" FontFamily="Segoe UI"/>
                             </Border>
 
                             <!-- Password -->

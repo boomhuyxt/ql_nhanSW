@@ -26,8 +26,8 @@
                 MouseDown="Border_MouseDown" HorizontalAlignment="Right" Width="835">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#0A0010" Offset="0"/>
-                    <GradientStop Color="#0D0020" Offset="1"/>
+                    <GradientStop Color="#FFFBF5" Offset="0"/>
+                    <GradientStop Color="#F7EFE5" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
 
@@ -48,7 +48,7 @@
                          Margin="0,0,-80,-80" Opacity="0.08">
                     <Ellipse.Fill>
                         <RadialGradientBrush>
-                            <GradientStop Color="#7C3AED" Offset="0"/>
+                            <GradientStop Color="#674188" Offset="0"/>
                             <GradientStop Color="#00000000" Offset="1"/>
                         </RadialGradientBrush>
                     </Ellipse.Fill>
@@ -72,7 +72,7 @@
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <TextBlock Text="HR PORTAL"
-                                   Foreground="#E9D5FF" FontSize="22" FontWeight="Bold"
+                                   Foreground="#674188" FontSize="22" FontWeight="Bold"
                                    HorizontalAlignment="Center" Margin="0,0,0,6"/>
                         <TextBlock Text="MANAGEMENT V2"
                                    Foreground="#6B21A8" FontSize="10"
@@ -80,25 +80,25 @@
                     </StackPanel>
 
                     <!-- FORM -->
-                    <Border Background="#0D0020" BorderBrush="#3B0764" BorderThickness="1"
+                    <Border Background="#F7EFE5" BorderBrush="#C3ACD0" BorderThickness="1"
                             CornerRadius="12" Padding="28,24">
                         <StackPanel>
 
                             <TextBlock Text="ĐĂNG NHẬP"
-                                       Foreground="#E9D5FF" FontSize="16" FontWeight="Bold"
+                                       Foreground="#674188" FontSize="16" FontWeight="Bold"
                                        HorizontalAlignment="Center" Margin="0,0,0,4"/>
                             <TextBlock Text="SYSTEM_ACCESS: AUTHORIZED"
                                        Foreground="#4C1D95" FontSize="9"
                                        HorizontalAlignment="Center" Margin="0,0,0,22"/>
 
                             <!-- Username -->
-                            <TextBlock Text="TÊN ĐĂNG NHẬP" Foreground="#6B21A8"
+                            <TextBlock Text="EMAIL ĐĂNG NHẬP" Foreground="#6B21A8"
                                        FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
-                            <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
+                            <Border Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1"
                                     CornerRadius="8" Margin="0,0,0,14">
-                                <TextBox x:Name="TxtUsername"
+                                <TextBox x:Name="TxtEmail"
                                          Background="Transparent"
-                                         Foreground="#E9D5FF" CaretBrush="#A855F7"
+                                         Foreground="#674188" CaretBrush="#A855F7"
                                          BorderThickness="0" Padding="12,9"
                                          FontSize="13" FontFamily="Segoe UI"/>
                             </Border>
@@ -106,16 +106,16 @@
                             <!-- Password -->
                             <TextBlock Text="MẬT KHẨU" Foreground="#6B21A8"
                                        FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
-                            <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
+                            <Border Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1"
                                     CornerRadius="8" Margin="0,0,0,8">
                                 <PasswordBox x:Name="TxtPassword"
                                              Background="Transparent"
-                                             Foreground="#E9D5FF" CaretBrush="#A855F7"
+                                             Foreground="#674188" CaretBrush="#A855F7"
                                              BorderThickness="0" Padding="12,9"
                                              FontSize="13" FontFamily="Segoe UI"/>
                             </Border>
 
-                            <TextBlock Text="Quên mật khẩu?" Foreground="#7C3AED"
+                            <TextBlock Text="Quên mật khẩu?" Foreground="#6B21A8"
                                        FontSize="11" HorizontalAlignment="Right"
                                        Cursor="Hand" Margin="0,0,0,20"/>
 
@@ -221,7 +221,7 @@
                         <TextBlock Text="HR PORTAL" Foreground="#E9D5FF"
                                    FontSize="20" FontWeight="Bold"
                                    HorizontalAlignment="Center" Margin="0,0,0,6"/>
-                        <TextBlock Text="MANAGEMENT V2" Foreground="#6B21A8"
+                        <TextBlock Text="MANAGEMENT V2" Foreground="#C3ACD0"
                                    FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,28"/>
 
                         <Rectangle Height="1" Width="100" Fill="#2D0060" Margin="0,0,0,28"/>
@@ -230,14 +230,14 @@
             </Border>
 
             <!-- Cột phải: form đăng ký -->
-            <Border Grid.Column="1" Background="#0D0020"
+            <Border Grid.Column="1" Background="#F7EFE5"
                     CornerRadius="0,16,16,0"
                     BorderBrush="#2D0060" BorderThickness="1,0,0,0"
                     MouseDown="Border_MouseDown">
                 <StackPanel VerticalAlignment="Center" Margin="36,0">
 
                     <TextBlock Text="ĐĂNG KÝ"
-                               Foreground="#E9D5FF" FontSize="18" FontWeight="Bold"
+                               Foreground="#674188" FontSize="18" FontWeight="Bold"
                                HorizontalAlignment="Center" Margin="0,0,0,4"/>
                     <TextBlock Text="SYSTEM_REGISTER: NEW_USER"
                                Foreground="#4C1D95" FontSize="9"
@@ -246,9 +246,9 @@
                     <!-- Email -->
                     <TextBlock Text="EMAIL" Foreground="#6B21A8"
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
+                    <Border Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,12">
-                        <TextBox x:Name="TxtRegEmail" Background="Transparent" Foreground="#E9D5FF"
+                        <TextBox x:Name="TxtRegEmail" Background="Transparent" Foreground="#674188"
                                  CaretBrush="#A855F7" BorderThickness="0"
                                  Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -256,9 +256,9 @@
                     <!-- Username -->
                     <TextBlock Text="TÊN ĐĂNG NHẬP" Foreground="#6B21A8"
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
+                    <Border Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,12">
-                        <TextBox x:Name="TxtRegUsername" Background="Transparent" Foreground="#E9D5FF"
+                        <TextBox x:Name="TxtRegUsername" Background="Transparent" Foreground="#674188"
                                  CaretBrush="#A855F7" BorderThickness="0"
                                  Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -266,9 +266,9 @@
                     <!-- Password -->
                     <TextBlock Text="MẬT KHẨU" Foreground="#6B21A8"
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
+                    <Border Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,12">
-                        <PasswordBox x:Name="TxtRegPassword" Background="Transparent" Foreground="#E9D5FF"
+                        <PasswordBox x:Name="TxtRegPassword" Background="Transparent" Foreground="#674188"
                                      CaretBrush="#A855F7" BorderThickness="0"
                                      Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -276,9 +276,9 @@
                     <!-- Confirm Password -->
                     <TextBlock Text="XÁC NHẬN MẬT KHẨU" Foreground="#6B21A8"
                                FontSize="9" FontWeight="Bold" Margin="0,0,0,6"/>
-                    <Border Background="#150028" BorderBrush="#4C1D95" BorderThickness="1"
+                    <Border Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1"
                             CornerRadius="8" Margin="0,0,0,18">
-                        <PasswordBox x:Name="TxtRegConfirmPassword" Background="Transparent" Foreground="#E9D5FF"
+                        <PasswordBox x:Name="TxtRegConfirmPassword" Background="Transparent" Foreground="#674188"
                                      CaretBrush="#A855F7" BorderThickness="0"
                                      Padding="12,9" FontSize="13" FontFamily="Segoe UI"/>
                     </Border>
@@ -333,5 +333,5 @@
         </Grid>
 
     </Grid>
-    
+
 </Window>

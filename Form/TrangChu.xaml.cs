@@ -43,8 +43,8 @@ namespace ql_nhanSW
             // Gọi hàm hiển thị thông tin tài khoản ngay khi mở form
             LoadUserInfo();
 
-            MainContent.Content = new UC_DashBoard();
-            SetActiveButton(BtnDashBoard);
+            MainContent.Content = new BanDieuKhien();
+            SetActiveButton(BtnDieuKhien);
         }
 
         #region User Info Logic
@@ -104,8 +104,8 @@ namespace ql_nhanSW
         #region UI Helper Methods
         private void SetActiveButton(Button activeBtn)
         {
-            BtnDashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0A0010"));
-            BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            BtnDieuKhien.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0A0010"));
+            BtnDieuKhien.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
             BtnPheDuyet.Background = new SolidColorBrush(Colors.Transparent);
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
@@ -117,11 +117,13 @@ namespace ql_nhanSW
         #endregion
 
         #region Navigation Click Events
-        private void BtnDashBoard_Click(object sender, RoutedEventArgs e)
+        private void BtnDieuKhien_Click(object sender, RoutedEventArgs e)
         {
-            SetActiveButton(BtnDashBoard);
-            MainContent.Content = new UC_DashBoard();
+            SetActiveButton(BtnDieuKhien);
+            // Sử dụng UC_DashBoard (là UserControl) thay vì BanDieuKhien (là Window)
+            MainContent.Content = new BanDieuKhien();
         }
+     
 
         private void BtnNhanSu_Click(object sender, RoutedEventArgs e)
         {
@@ -133,6 +135,8 @@ namespace ql_nhanSW
         {
             if (!AuthorizationService.RequireAdmin()) return;
             SetActiveButton(BtnPheDuyet);
+            MainContent.Content = new UC_DashBoard();
+           
         }
 
         private void BtnCauHinhLuong_Click(object sender, RoutedEventArgs e)
@@ -145,14 +149,15 @@ namespace ql_nhanSW
         private void BtnBaoCaoTK_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(BtnBaoCaoTK);
+            MainContent.Content = new UC_BCTK(); // Bây giờ lệnh này sẽ hoạt động vì UC_BCTK đã là UserControl
         }
 
         // --- Mở trang Cập nhật thông tin ---
         private void BtnMoCapNhat_Click(object sender, RoutedEventArgs e)
         {
             // 1. Xóa hiệu ứng sáng màu của các nút trên menu trái
-            BtnDashBoard.Background = new SolidColorBrush(Colors.Transparent);
-            BtnDashBoard.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            BtnDieuKhien.Background = new SolidColorBrush(Colors.Transparent);
+            BtnDieuKhien.BorderBrush = new SolidColorBrush(Colors.Transparent);
             BtnNhanSu.Background = new SolidColorBrush(Colors.Transparent);
             BtnPheDuyet.Background = new SolidColorBrush(Colors.Transparent);
             BtnCauHinhLuong.Background = new SolidColorBrush(Colors.Transparent);
@@ -330,5 +335,7 @@ namespace ql_nhanSW
             }
         }
         #endregion
+
+
     }
 }

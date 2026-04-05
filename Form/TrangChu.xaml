@@ -34,7 +34,7 @@
                 </Border>
 
                 <StackPanel DockPanel.Dock="Top" Margin="10,14,10,0">
-                    <Button x:Name="BtnDashBoard" Click="BtnDashBoard_Click"
+                    <Button x:Name="BtnDieuKhien" Click="BtnDieuKhien_Click"
                             Background="#1E0040" BorderThickness="1" BorderBrush="#7C3AED"
                             Padding="12,5" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Left" Cursor="Hand" FontSize="13">

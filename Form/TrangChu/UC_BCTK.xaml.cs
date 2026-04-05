@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace ql_nhanSW.Form.TrangChu
+{
+    public partial class UC_BCTK : UserControl 
+    {
+        public UC_BCTK()
+        {
+            InitializeComponent();
+        }
+    }
+}

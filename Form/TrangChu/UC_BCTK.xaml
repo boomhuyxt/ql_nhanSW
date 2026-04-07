@@ -1,128 +1,130 @@
 ﻿<UserControl x:Class="ql_nhanSW.Form.TrangChu.UC_BCTK"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:ql_nhanSW.Form.TrangChu"
-             mc:Ignorable="d"
-             Background="#FFFBF5"
-             FontFamily="Segoe UI">
-    <DockPanel LastChildFill="False">
-        <Border DockPanel.Dock="Top"
-                Background="#F7EFE5"
-                Padding="24,16"
-                BorderBrush="#2D0060"
-                BorderThickness="0,0,0,1">
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000"
+             Background="#F8FAFC" FontFamily="Segoe UI">
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Top" Background="#FFFFFF" Padding="20,15" BorderBrush="#E9D5FF" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <TextBlock Text="BÁO CÁO CHI TIẾT &amp; THỐNG KÊ" Foreground="#4C1D95" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
 
-                <StackPanel VerticalAlignment="Center" Grid.Column="0">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="THỐNG KÊ" Foreground="#674188" FontSize="18" FontWeight="Bold"/>
-                        <Border Width="350" Background="#FFFBF5" BorderBrush="#4C1D95" BorderThickness="1" CornerRadius="8" Padding="10,6" Margin="80,0,0,0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="#4C1D95" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock VerticalAlignment="Center" Text="Tìm kiếm nhân sự..." Foreground="#4C1D95" FontSize="12" FontFamily="Segoe UI"/>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Border Width="32" Height="32" CornerRadius="8" Background="#C3ACD0" BorderBrush="#4C1D95" BorderThickness="1" Margin="8,0,0,0" Cursor="Hand">
-                        <TextBlock Foreground="#9D78CC" Text="🔔" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <Border Width="32" Height="32" CornerRadius="8" Background="#C3ACD0" BorderBrush="#4C1D95" BorderThickness="1" Margin="8,0,0,0" Cursor="Hand">
-                        <Border Width="20" Height="20" CornerRadius="10" Background="Transparent" BorderBrush="#674188" BorderThickness="1">
-                            <TextBlock Text="?" FontSize="13" FontWeight="Bold" Foreground="#9D78CC" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </Border>
+                    <TextBlock Text="Tìm kiếm nhân viên:" VerticalAlignment="Center" Foreground="#64748B" Margin="0,0,10,0"/>
+                    <Grid Width="280">
+                        <TextBox x:Name="txtSearchNhanVien" Height="32" VerticalContentAlignment="Center" Padding="8,0" BorderBrush="#DDD6FE" TextChanged="txtSearchNhanVien_TextChanged"/>
+
+                        <TextBlock IsHitTestVisible="False" Text="Nhập tên nhân viên..." VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="#94A3B8" FontSize="12">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=txtSearchNhanVien}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <Popup x:Name="popGoiY" PlacementTarget="{Binding ElementName=txtSearchNhanVien}" Placement="Bottom" StaysOpen="False" AllowsTransparency="True">
+                            <Border Background="White" BorderBrush="#DDD6FE" BorderThickness="1" CornerRadius="0,0,8,8" Width="280" MaxHeight="250">
+                                <ListBox x:Name="lstGoiY" BorderThickness="0" SelectionChanged="lstGoiY_SelectionChanged" Background="Transparent">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="5">
+                                                <TextBlock Text="{Binding HoTen}" FontWeight="Bold" Foreground="#1E1B4B"/>
+                                                <TextBlock Text="{Binding Email}" FontSize="10" Foreground="#6B21A8" Opacity="0.7"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Border>
+                        </Popup>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <StackPanel DockPanel.Dock="Top" Margin="24,20,24,0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0" Background="#F7EFE5" BorderBrush="#3B0764" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,0,10,0">
+        <UniformGrid DockPanel.Dock="Top" Columns="3" Margin="20,15,20,0">
+            <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="👥" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
                     <StackPanel>
-                        <Grid Margin="0,0,0,10">
-                            <Border Width="36" Height="36" CornerRadius="8" Background="#FFF6C0" BorderBrush="#713F12" BorderThickness="1" HorizontalAlignment="Right">
-                                <TextBlock Text="👥" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Tổng nhân sự" Foreground="#674188" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </Grid>
-                        <TextBlock x:Name="txtTongNhanSu" Text="1,284" Foreground="#674188" FontSize="24" FontWeight="Bold"/>
+                        <TextBlock Text="Tổng nhân sự" FontSize="11" Foreground="#64748B"/>
+                        <TextBlock x:Name="txtTongNhanSu" Text="0" Foreground="#7C3AED" FontSize="20" FontWeight="Bold"/>
                     </StackPanel>
-                </Border>
-
-                <Border Grid.Column="1" Background="#F7EFE5" BorderBrush="#3B0764" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,0,10,0">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,10">
-                            <Border Width="36" Height="36" CornerRadius="8" Background="#BCD9A2" BorderBrush="#14532D" BorderThickness="1" HorizontalAlignment="Right">
-                                <TextBlock Text="📊" Foreground="#6D9E51" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-                            </Border>
-                            <TextBlock Text="Tỷ lệ chuyên cần" Foreground="#674188" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </Grid>
-                        <TextBlock x:Name="txtChuyenCan" Text="96.5%" Foreground="#674188" FontSize="24" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Column="2" Background="#F7EFE5" BorderBrush="#3B0764" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,0,10,0">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,10">
-                            <Border Width="36" Height="36" CornerRadius="8" Background="#FFF6C0" BorderBrush="#713F12" BorderThickness="1" HorizontalAlignment="Right">
-                                <TextBlock Text="📝" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Công việc" Foreground="#674188" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </Grid>
-                        <TextBlock x:Name="txtCongViec" Text="24" Foreground="#674188" FontSize="24" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Column="3" Background="#F7EFE5" BorderBrush="#3B0764" BorderThickness="1" CornerRadius="12" Padding="16">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,10">
-                            <Border Width="36" Height="36" CornerRadius="8" Background="#C3ACD0" BorderBrush="#4C1D95" BorderThickness="1" HorizontalAlignment="Right">
-                                <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Tuyển dụng" Foreground="#674188" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </Grid>
-                        <TextBlock x:Name="txtTuyenDung" Text="18" Foreground="#674188" FontSize="24" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </StackPanel>
-
-        <Grid DockPanel.Dock="Top" Margin="24,26,24,24">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="14"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Border Grid.Column="0" Background="#F7EFE5" BorderBrush="#C3ACD0" BorderThickness="1" CornerRadius="12" Padding="16">
-                <StackPanel>
-                    <TextBlock Text="Biểu đồ chuyên cần" FontSize="16" Foreground="#674188" FontWeight="Bold"/>
-                    <TextBlock Text="30 ngày qua" FontSize="12" Foreground="#C3ACD0" Margin="0,0,0,12"/>
-                    <Grid x:Name="LineChart" Height="220" Background="Transparent"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="2" Background="#F7EFE5" BorderBrush="#C3ACD0" BorderThickness="1" CornerRadius="12" Padding="16">
-                <StackPanel>
-                    <TextBlock Text="Số lượng nhân viên" FontSize="16" Foreground="#674188" FontWeight="Bold"/>
-                    <TextBlock Text="Theo phòng ban" FontSize="12" Foreground="#C3ACD0" Margin="0,0,0,12"/>
-                    <Grid x:Name="BarChart" Height="220" Background="Transparent"/>
+            <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="📝" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <StackPanel>
+                        <TextBlock Text="Công việc" FontSize="11" Foreground="#64748B"/>
+                        <TextBlock x:Name="txtCongViec" Text="24" Foreground="#7C3AED" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
                 </StackPanel>
+            </Border>
+
+            <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" CornerRadius="12" Padding="12">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="👤" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <StackPanel>
+                        <TextBlock Text="Tuyển dụng" FontSize="11" Foreground="#64748B"/>
+                        <TextBlock x:Name="txtTuyenDung" Text="0" Foreground="#7C3AED" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <Grid Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12" Padding="15">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Tỷ lệ chuyên cần (%)" Foreground="#1E1B4B" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                        <ComboBox x:Name="cbExportChuyenCan" Width="80" Height="28" FontSize="11" SelectedIndex="0" Margin="0,0,5,0">
+                            <ComboBoxItem Content="Excel"/>
+                            <ComboBoxItem Content="PDF"/>
+                        </ComboBox>
+                        <Button Content="Xuất file" Name="BtnExportChuyenCan" Background="#16A34A" Foreground="White" Padding="10,0" Height="28" Click="BtnExport_Click"/>
+                    </StackPanel>
+
+                    <Canvas x:Name="CanvasChuyenCan" Background="#FDFBFF" Height="220">
+                        <Polyline x:Name="PolyChuyenCan" Stroke="#7C3AED" StrokeThickness="2"/>
+                    </Canvas>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12" Padding="15">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Biến động chi trả lương (Triệu VNĐ)" Foreground="#1E1B4B" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                        <ComboBox x:Name="cbExportLuong" Width="80" Height="28" FontSize="11" SelectedIndex="0" Margin="0,0,5,0">
+                            <ComboBoxItem Content="Excel"/>
+                            <ComboBoxItem Content="PDF"/>
+                        </ComboBox>
+                        <Button Content="Xuất file" Name="BtnExportLuong" Background="#16A34A" Foreground="White" Padding="10,0" Height="28" Click="BtnExport_Click"/>
+                    </StackPanel>
+
+                    <Canvas x:Name="CanvasLuong" Background="#FDFBFF" Height="220">
+                        <Polyline x:Name="PolyLuong" Stroke="#16A34A" StrokeThickness="2"/>
+                    </Canvas>
+                </DockPanel>
             </Border>
         </Grid>
     </DockPanel>

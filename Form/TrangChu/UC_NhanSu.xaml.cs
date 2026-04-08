@@ -36,17 +36,12 @@ namespace ql_nhanSW.Form.TrangChu
         private void LoadCurrentUserInfo()
         {
             if (SessionManager.CurrentUser == null) return;
-
             var tk = SessionManager.CurrentUser;
-
             using var db = new AppDbContext();
             var nv = db.NhanViens.FirstOrDefault(n => n.MaTaiKhoan == tk.MaTaiKhoan);
-
             _currentEmployee = nv;
-
             txtHoTen.Text = nv?.HoTen ?? tk.TenDangNhap ?? "Người dùng";
             txtPhongBan.Text = "Nhân viên";
-
             if (!string.IsNullOrEmpty(tk.AnhDaiDien) && File.Exists(tk.AnhDaiDien))
             {
                 try
@@ -74,7 +69,6 @@ namespace ql_nhanSW.Form.TrangChu
                     })
                 .Where(x => !string.IsNullOrEmpty(x.AvatarPath))
                 .ToList();
-
             _employeeList = rawData
                 .Where(x => File.Exists(x.AvatarPath))
                 .ToList();
@@ -141,7 +135,6 @@ namespace ql_nhanSW.Form.TrangChu
                 MessageBox.Show("Hệ thống chưa có dữ liệu nhân viên!", "Cảnh báo");
                 return;
             }
-
             try
             {
                 string tempPath = Path.Combine(Path.GetTempPath(), $"temp_face_{DateTime.Now.Ticks}.jpg");
@@ -219,7 +212,7 @@ namespace ql_nhanSW.Form.TrangChu
         }
 
         // =================================================================
-        // 6. Load lịch sử chấm công
+        // 6. Load lịch sử chấm công (ĐÃ SỬA - hiển thị cả giờ vào và giờ ra)
         // =================================================================
         private void LoadLichSuToday()
         {
@@ -227,7 +220,6 @@ namespace ql_nhanSW.Form.TrangChu
 
             using var db = new AppDbContext();
             var today = DateTime.Today;
-
             var history = db.ChamCongs
                 .Where(c => c.NgayLamViec == today)
                 .OrderByDescending(c => c.GioVao)
@@ -262,7 +254,7 @@ namespace ql_nhanSW.Form.TrangChu
                 Grid.SetColumn(border, 0);
                 grid.Children.Add(border);
 
-                // Thông tin
+                // Thông tin (Vào ca / Tan ca)
                 var stack = new StackPanel { Margin = new Thickness(10, 0, 0, 0) };
                 stack.Children.Add(new TextBlock
                 {
@@ -280,10 +272,17 @@ namespace ql_nhanSW.Form.TrangChu
                 Grid.SetColumn(stack, 1);
                 grid.Children.Add(stack);
 
-                // Giờ
+                // ====================== PHẦN ĐÃ SỬA ======================
+                // Hiển thị giờ vào - giờ ra (nếu đã tan ca)
+                string timeText = item.GioVao?.ToString(@"hh\:mm") ?? "";
+                if (item.GioRa.HasValue)
+                {
+                    timeText += $" - {item.GioRa.Value.ToString(@"hh\:mm")}";
+                }
+
                 var time = new TextBlock
                 {
-                    Text = item.GioVao?.ToString(@"hh\:mm") ?? "",
+                    Text = timeText,
                     Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#64748B")),
                     FontSize = 11,
                     HorizontalAlignment = HorizontalAlignment.Right,
@@ -291,6 +290,7 @@ namespace ql_nhanSW.Form.TrangChu
                 };
                 Grid.SetColumn(time, 2);
                 grid.Children.Add(time);
+                // ========================================================
 
                 spLichSu.Children.Add(grid);
             }

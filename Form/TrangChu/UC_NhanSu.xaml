@@ -4,37 +4,29 @@
              Background="#F8FAFC"
              FontFamily="Segoe UI"
              Unloaded="UserControl_Unloaded">
-    <DockPanel LastChildFill="False">
 
-        <Border DockPanel.Dock="Top"
-                Background="#FFFFFF"
-                Padding="24,16"
-                BorderBrush="#E9D5FF"
-                BorderThickness="0,0,0,1">
+    <DockPanel LastChildFill="False">
+        <!-- Header -->
+        <Border DockPanel.Dock="Top" Background="#FFFFFF" Padding="24,16"
+                BorderBrush="#E9D5FF" BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Center" Grid.Column="0">
-                    <TextBlock Text="QUẢN LÝ NHÂN SỰ"
-                               Foreground="#4C1D95"
+                    <TextBlock Text="QUẢN LÝ NHÂN SỰ" Foreground="#4C1D95"
                                FontSize="18" FontWeight="Bold"/>
                 </StackPanel>
-
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Border Background="#F5F3FF"
-                            BorderBrush="#DDD6FE" BorderThickness="1"
+                    <Border Background="#F5F3FF" BorderBrush="#DDD6FE" BorderThickness="1"
                             CornerRadius="8" Padding="10,6">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE721;" 
-                                       FontFamily="Segoe MDL2 Assets"
-                                       FontSize="12" 
-                                       Foreground="#7C3AED"
-                                       Margin="0,0,6,0" 
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="12" Foreground="#7C3AED" Margin="0,0,6,0"
                                        VerticalAlignment="Center"/>
-                            <TextBlock VerticalAlignment="Center" Text="Tìm kiếm nhân sự..."
-                                       Foreground="#9D78CC" FontSize="12"/>
+                            <TextBlock Text="Tìm kiếm nhân sự..." Foreground="#9D78CC" FontSize="12"
+                                       VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -42,42 +34,34 @@
         </Border>
 
         <StackPanel DockPanel.Dock="Top" Margin="24,20,24,0">
-            <TextBlock Text="Hệ Thống Chấm Công FaceID"
-                       Foreground="#1E1B4B" FontSize="22"
+            <TextBlock Text="Hệ Thống Chấm Công FaceID" Foreground="#1E1B4B" FontSize="22"
                        FontWeight="Bold" Margin="0,0,0,6"/>
             <TextBlock Text="Vui lòng di chuyển đến trước camera để thực hiện chấm công"
-                       Foreground="#64748B" FontSize="12"
-                       Margin="0,0,0,20"/>
+                       Foreground="#64748B" FontSize="12" Margin="0,0,0,20"/>
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
-                        Background="#FFFFFF"
-                        BorderBrush="#E9D5FF" BorderThickness="1"
-                        CornerRadius="12" Margin="0,0,16,0"
-                        Height="400" VerticalAlignment="Top">
+                <!-- Camera -->
+                <Border Grid.Column="0" Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1"
+                        CornerRadius="12" Margin="0,0,16,0" Height="400" VerticalAlignment="Top">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="15" Opacity="0.05" Color="#7C3AED"/>
                     </Border.Effect>
                     <Grid>
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Margin="16,16,0,0">
-                            <Ellipse Width="8" Height="8" Fill="#7C3AED" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Hệ thống đang sẵn sàng..." Foreground="#6D28D9" FontSize="12" FontWeight="SemiBold"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                                    VerticalAlignment="Top" Margin="16,16,0,0">
+                            <Ellipse Width="8" Height="8" Fill="#7C3AED" Margin="0,0,8,0"/>
+                            <TextBlock Text="Hệ thống đang sẵn sàng..." Foreground="#6D28D9"
+                                       FontSize="12" FontWeight="SemiBold"/>
                         </StackPanel>
-
-                        <Border Width="320" Height="240"
-                                Background="#F1F5F9"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                CornerRadius="8">
+                        <Border Width="320" Height="240" Background="#F1F5F9"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="8">
                             <Grid>
-                                <Image x:Name="imgCamera" Stretch="UniformToFill" />
+                                <Image x:Name="imgCamera" Stretch="UniformToFill"/>
                                 <Canvas IsHitTestVisible="False">
                                     <Border Canvas.Left="0" Canvas.Top="0" Width="30" Height="3" Background="#7C3AED" CornerRadius="2"/>
                                     <Border Canvas.Left="0" Canvas.Top="0" Width="3" Height="30" Background="#7C3AED" CornerRadius="2"/>
@@ -93,8 +77,8 @@
                     </Grid>
                 </Border>
 
+                <!-- Phần bên phải -->
                 <StackPanel Grid.Column="1">
-
                     <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1"
                             CornerRadius="12" Padding="16" Margin="0,0,0,12">
                         <StackPanel>
@@ -105,84 +89,54 @@
                                 </Border>
                             </Grid>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                                <Border Width="45" Height="45" CornerRadius="22.5" Background="#F5F3FF" BorderBrush="#7C3AED" BorderThickness="1.5">
-                                    <TextBlock Text="👤" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <!-- Avatar + Thông tin người dùng (đã có x:Name) -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <Border Width="45" Height="45" CornerRadius="22.5" Background="#F5F3FF"
+                                        BorderBrush="#7C3AED" BorderThickness="1.5">
+                                    <Image x:Name="imgUserAvatar" Stretch="UniformToFill">
+                                        <Image.Clip>
+                                            <EllipseGeometry RadiusX="22.5" RadiusY="22.5" Center="22.5,22.5"/>
+                                        </Image.Clip>
+                                    </Image>
                                 </Border>
                                 <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                                     <TextBlock Text="Chào mừng trở lại," Foreground="#64748B" FontSize="10"/>
-                                    <TextBlock Text="Sarah Jenkins" Foreground="#1E1B4B" FontSize="14" FontWeight="Bold"/>
-                                    <TextBlock Text="Phòng Thiết kế" Foreground="#7C3AED" FontSize="11" FontWeight="SemiBold"/>
+                                    <TextBlock x:Name="txtHoTen" Text="Sarah Jenkins" 
+                                               Foreground="#1E1B4B" FontSize="14" FontWeight="Bold"/>
+                                    <TextBlock x:Name="txtPhongBan" Text="Phòng Thiết kế" 
+                                               Foreground="#7C3AED" FontSize="11" FontWeight="SemiBold"/>
                                 </StackPanel>
                             </StackPanel>
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Background="#7C3AED" Foreground="White" Height="35" Margin="0,0,5,0" Cursor="Hand" Click="CheckinBtn_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="8">
-                                                <TextBlock Text="Vào ca" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                                <Button Grid.Column="1" Background="White" BorderBrush="#7C3AED" BorderThickness="1" Foreground="#7C3AED" Height="35" Margin="5,0,0,0" Cursor="Hand" Click="CheckoutBtn_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
-                                                <TextBlock Text="Tan ca" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </Grid>
+                            <!-- Button chấm công -->
+                            <Button x:Name="btnChamCong" Click="BtnChamCong_Click"
+                                    Height="52" Cursor="Hand" FontSize="16" FontWeight="SemiBold">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border" Background="#7C3AED" CornerRadius="10">
+                                            <TextBlock x:Name="txtButtonText" Text="Vào ca" 
+                                                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="#6D28D9"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
                         </StackPanel>
                     </Border>
 
-                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" CornerRadius="12" Padding="16">
+                    <!-- Lịch sử -->
+                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1"
+                            CornerRadius="12" Padding="16">
                         <StackPanel>
-                            <TextBlock Text="Lịch sử vào/ra hôm nay" Foreground="#1E1B4B" FontSize="13" FontWeight="Bold" Margin="0,0,0,12"/>
-
-                            <Grid Margin="0,0,0,8">
-                                <TextBlock Text="NHÂN VIÊN" Foreground="#94A3B8" FontSize="10" FontWeight="Bold"/>
-                                <TextBlock Text="GIỜ" Foreground="#94A3B8" FontSize="10" FontWeight="Bold" HorizontalAlignment="Right"/>
-                            </Grid>
-                            <Rectangle Height="1" Fill="#F1F5F9" Margin="0,0,0,12"/>
-
-                            <Grid Margin="0,0,0,12">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="28" Height="28" CornerRadius="14" Background="#F5F3FF">
-                                        <TextBlock Text="MC" Foreground="#7C3AED" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <StackPanel Margin="10,0,0,0">
-                                        <TextBlock Text="Michael Chang" Foreground="#1E1B4B" FontSize="11" FontWeight="SemiBold"/>
-                                        <TextBlock Text="Vào ca" Foreground="#16A34A" FontSize="10"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <TextBlock Text="08:15" Foreground="#64748B" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
-
-                            <Grid Margin="0,0,0,12">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="28" Height="28" CornerRadius="14" Background="#F5F3FF">
-                                        <TextBlock Text="EW" Foreground="#7C3AED" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <StackPanel Margin="10,0,0,0">
-                                        <TextBlock Text="Emma Wilson" Foreground="#1E1B4B" FontSize="11" FontWeight="SemiBold"/>
-                                        <TextBlock Text="Vào ca" Foreground="#16A34A" FontSize="10"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <TextBlock Text="09:02" Foreground="#64748B" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
-
-                            <Button Content="Xem báo cáo chi tiết" Background="Transparent" Foreground="#7C3AED" BorderThickness="0" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,10,0,0" Cursor="Hand"/>
+                            <TextBlock Text="Lịch sử vào/ra hôm nay" Foreground="#1E1B4B" 
+                                       FontSize="13" FontWeight="Bold" Margin="0,0,0,12"/>
+                            <StackPanel x:Name="spLichSu"/>
                         </StackPanel>
                     </Border>
-
                 </StackPanel>
             </Grid>
         </StackPanel>

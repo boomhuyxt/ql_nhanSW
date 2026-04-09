@@ -25,6 +25,8 @@ namespace ql_nhanSW.Form.TrangChu
         public UC_BCTK()
         {
             InitializeComponent();
+            // Đảm bảo popup giữ mở đủ để chọn item; sẽ đóng thủ công khi chọn
+            try { popGoiY.StaysOpen = true; } catch { }
             LoadData();
         }
 
@@ -37,13 +39,15 @@ namespace ql_nhanSW.Form.TrangChu
                 txtTuyenDung.Text = _db.TaiKhoans.Count(tk => tk.TrangThai == 0).ToString("N0");
 
                 // 2. Kết hợp bảng NhanVien và TaiKhoan để lấy Email hiển thị 
+                // Dùng left join để vẫn hiển thị nhân viên chưa có tài khoản
                 dsHienThi = (from nv in _db.NhanViens
-                             join tk in _db.TaiKhoans on nv.MaTaiKhoan equals tk.MaTaiKhoan
+                             join tk in _db.TaiKhoans on nv.MaTaiKhoan equals tk.MaTaiKhoan into gj
+                             from tk in gj.DefaultIfEmpty()
                              select new
                              {
                                  nv.MaNhanVien,
                                  nv.HoTen,
-                                 Email = tk.Email, // Lấy Email từ bảng TaiKhoan [cite: 5]
+                                 Email = tk != null ? tk.Email : string.Empty,
                                  nv.MaTaiKhoan
                              }).ToList<dynamic>();
             }
@@ -56,11 +60,15 @@ namespace ql_nhanSW.Form.TrangChu
 
         private void txtSearchNhanVien_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string query = txtSearchNhanVien.Text.ToLower().Trim();
+            string raw = txtSearchNhanVien.Text.Trim();
+            string query = RemoveDiacritics(raw).ToLowerInvariant();
             if (string.IsNullOrEmpty(query)) { popGoiY.IsOpen = false; return; }
 
-           // Tìm kiếm tương đối trên danh sách chứa tên và email [cite: 4]
-            var filter = dsHienThi.Where(nv => nv.HoTen.ToLower().Contains(query)).Take(10).ToList();
+           // Tìm kiếm tương đối trên danh sách chứa tên và email, bỏ dấu để hỗ trợ tiếng Việt
+            var filter = dsHienThi.Where(nv =>
+                (!string.IsNullOrEmpty((string)nv.HoTen) && RemoveDiacritics(((string)nv.HoTen)).ToLowerInvariant().Contains(query))
+                || (!string.IsNullOrEmpty((string)nv.Email) && RemoveDiacritics(((string)nv.Email)).ToLowerInvariant().Contains(query))
+            ).Take(10).ToList();
 
             if (filter.Any())
             {
@@ -76,7 +84,8 @@ namespace ql_nhanSW.Form.TrangChu
             if (selected != null)
             {
                 txtSearchNhanVien.Text = selected.HoTen;
-                popGoiY.IsOpen = false;
+                // Đóng popup thủ công
+                try { popGoiY.IsOpen = false; } catch { }
                 UpdateCharts(selected.MaNhanVien);
             }
         }
@@ -90,8 +99,34 @@ namespace ql_nhanSW.Form.TrangChu
 
             // Vẽ biểu đồ Chuyên cần từ database [cite: 9]
             var chams = _db.ChamCongs.Where(c => c.MaNhanVien == maNV).OrderBy(c => c.NgayLamViec).Take(6).ToList();
-            DrawLineChart(CanvasChuyenCan, PolyChuyenCan, chams.Select(c => 100.0).ToList(),
+            // Tính phần trăm chuyên cần dựa trên giờ làm (8h/ngày)
+            var chuyenCanValues = chams.Select(c =>
+            {
+                if (c.GioVao.HasValue && c.GioRa.HasValue)
+                {
+                    double hours = (c.GioRa.Value - c.GioVao.Value).TotalHours;
+                    if (hours < 0) hours = 0; // phòng trường hợp dữ liệu lệch
+                    return Math.Min(100.0, Math.Round(hours / 8.0 * 100.0, 1));
+                }
+                return 0.0;
+            }).ToList();
+            DrawLineChart(CanvasChuyenCan, PolyChuyenCan, chuyenCanValues,
                           chams.Select(c => c.NgayLamViec.ToString("dd/MM")).ToList(), "#7C3AED", false);
+        }
+
+        // Loại bỏ dấu tiếng Việt để tìm kiếm
+        private static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return string.Empty;
+            var normalized = text.Normalize(System.Text.NormalizationForm.FormD);
+            var sb = new System.Text.StringBuilder();
+            foreach (var ch in normalized)
+            {
+                var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                    sb.Append(ch);
+            }
+            return sb.ToString().Normalize(System.Text.NormalizationForm.FormC);
         }
 
         // Chỉ định rõ namespace System.Windows.Controls để tránh lỗi Ambiguous 

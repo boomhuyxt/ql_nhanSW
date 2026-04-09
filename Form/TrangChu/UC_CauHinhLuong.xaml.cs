@@ -99,7 +99,6 @@ namespace ql_nhanSW.Form.TrangChu
         }
 
         // 4. Xác nhận và lưu vào Database
-        // 4. Xác nhận và lưu vào Database
         private void btnXacNhanXuatLuong_Click(object sender, RoutedEventArgs e)
         {
             if (_luongTamThoi == null) return;
@@ -142,5 +141,7 @@ namespace ql_nhanSW.Form.TrangChu
                 MessageBox.Show("Lỗi: " + (ex.InnerException?.Message ?? ex.Message));
             }
         }
+
+
     }
 }

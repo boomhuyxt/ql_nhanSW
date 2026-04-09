@@ -9,6 +9,16 @@ namespace ql_nhanSW
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            // Thiết lập license EPPlus cho môi trường phát triển (NonCommercial)
+            try
+            {
+                OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            }
+            catch { }
+
+        }
     }
 
 }

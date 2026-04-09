@@ -159,8 +159,8 @@ namespace ql_nhanSW.Form.TrangChu
 
         private void ExportExcel(string path, string type)
         {
-            // Sửa lỗi LicenseException 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            // Cố gắng thiết lập license cho EPPlus phù hợp với nhiều phiên bản (EPPlus 5..8+)
+            TrySetEpplusLicense();
 
             using (var package = new ExcelPackage())
             {
@@ -168,6 +168,49 @@ namespace ql_nhanSW.Form.TrangChu
                 ws.Cells[1, 1].Value = "BAO CAO " + type.ToUpper();
                 ws.Cells[2, 1].Value = "Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy");
                 package.SaveAs(new FileInfo(path));
+            }
+        }
+
+        // Thiết lập license cho EPPlus bằng reflection để tương thích nhiều phiên bản
+        private void TrySetEpplusLicense()
+        {
+            try
+            {
+                var excelType = typeof(ExcelPackage);
+                // Thử property ExcelPackage.License (EPPlus 8+)
+                var licenseProp = excelType.GetProperty("License", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                if (licenseProp != null && licenseProp.CanWrite)
+                {
+                    var propType = licenseProp.PropertyType;
+                    if (propType.IsEnum)
+                    {
+                        var enumVal = Enum.Parse(propType, "NonCommercial");
+                        licenseProp.SetValue(null, enumVal);
+                        return;
+                    }
+                    if (propType == typeof(string))
+                    {
+                        licenseProp.SetValue(null, "NonCommercial");
+                        return;
+                    }
+                }
+
+                // Fallback: ExcelPackage.LicenseContext (older versions)
+                var ctxProp = excelType.GetProperty("LicenseContext", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                if (ctxProp != null && ctxProp.CanWrite)
+                {
+                    var ctxType = ctxProp.PropertyType;
+                    if (ctxType.IsEnum)
+                    {
+                        var enumVal = Enum.Parse(ctxType, "NonCommercial");
+                        ctxProp.SetValue(null, enumVal);
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore - if license cannot be set, EPPlus will throw a clear exception when used
             }
         }
 

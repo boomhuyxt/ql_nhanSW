@@ -272,7 +272,6 @@ namespace ql_nhanSW.Form.TrangChu
                 Grid.SetColumn(stack, 1);
                 grid.Children.Add(stack);
 
-                // ====================== PHẦN ĐÃ SỬA ======================
                 // Hiển thị giờ vào - giờ ra (nếu đã tan ca)
                 string timeText = item.GioVao?.ToString(@"hh\:mm") ?? "";
                 if (item.GioRa.HasValue)

@@ -178,11 +178,11 @@
 
                                                 <TextBlock Grid.Column="2" Text="{Binding LoaiNghi}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#6B21A8"/>
 
-                                                <Button Grid.Column="3" Content="👁 Xem minh chứng" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+                                                <Button Grid.Column="6" Content="👁 Xem minh chứng" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
                                                         Foreground="#7C3AED" FontWeight="Bold" Click="BtnXemMinhChung_Click" Tag="{Binding LyDo}"/>
 
                                                 <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
-                                                    <Button Content="Chấp nhận" Background="#16A34A" Foreground="White" Width="95" Height="32" 
+                                                    <Button Content="Chấp nhận" Background="#16A34A" Foreground="White" Width="100" Height="32" 
                                                             Margin="0,0,10,0" Click="BtnDuyetNghiPhep_Click" Tag="{Binding}">
                                                         <Button.Resources>
                                                             <Style TargetType="Border">
@@ -190,7 +190,7 @@
                                                             </Style>
                                                         </Button.Resources>
                                                     </Button>
-                                                    <Button Content="Từ chối" Background="#EF4444" Foreground="White" Width="95" Height="32" 
+                                                    <Button Content="Từ chối" Background="#EF4444" Foreground="White" Width="100" Height="32" 
                                                             Click="BtnTuChoiNghiPhep_Click" Tag="{Binding}">
                                                         <Button.Resources>
                                                             <Style TargetType="Border">

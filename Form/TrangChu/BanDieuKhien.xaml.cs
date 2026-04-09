@@ -7,16 +7,16 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.IO;
+using System.IO.IsolatedStorage;
 
 namespace ql_nhanSW.Form.TrangChu
 {
-    // Class định nghĩa dữ liệu cho cột biểu đồ
     public class ChartData
     {
-        public string Label { get; set; }        // Ví dụ: T10
-        public double ColumnHeight { get; set; } // Chiều cao (px)
-        public string ValueDisplay { get; set; } // Ví dụ: 17.5tr
-        public string FullInfo { get; set; }     // Thông tin chi tiết khi hover
+        public string Label { get; set; }
+        public double ColumnHeight { get; set; }
+        public string ValueDisplay { get; set; }
+        public string FullInfo { get; set; }
     }
 
     public partial class BanDieuKhien : UserControl
@@ -28,45 +28,59 @@ namespace ql_nhanSW.Form.TrangChu
         {
             InitializeComponent();
             LoadPersonalDashboard();
+
+            // Mỗi khi form được load, kiểm tra xem người dùng đã cập nhật thông tin ở form kia chưa
+            ShowHuongDanAlert();
         }
 
-        // Hàm tự động tải thông tin cá nhân, biểu đồ và trạng thái nghỉ phép
+        // ==================== LOGIC HIỂN THỊ THÔNG BÁO ====================
+        private void ShowHuongDanAlert()
+        {
+            using (var store = IsolatedStorageFile.GetUserStoreForAssembly())
+            {
+                // Nếu file này tồn tại (do form CapNhatThongTin tạo ra), ẩn thông báo ngay
+                if (store.FileExists("DaCapNhatThongTin.txt"))
+                {
+                    alertHuongDan.Visibility = Visibility.Collapsed;
+                    return;
+                }
+            }
+            // Nếu chưa có file đánh dấu, hiện thông báo hướng dẫn
+            alertHuongDan.Visibility = Visibility.Visible;
+        }
+
         private void LoadPersonalDashboard()
         {
             try
             {
-                // Lấy thông tin tài khoản hiện tại từ Session
                 var currentUser = SessionManager.CurrentUser;
                 if (currentUser == null) return;
 
-                // 1. Tìm nhân viên liên kết với tài khoản này
                 var nhanVien = _db.NhanViens.FirstOrDefault(nv => nv.MaTaiKhoan == currentUser.MaTaiKhoan);
                 if (nhanVien != null)
                 {
-                    // Hiển thị tên Phòng ban
+                    // 1. Hiển thị phòng ban
                     var phongBan = _db.PhongBans.Find(nhanVien.MaPhongBan);
                     txtPhongBan.Text = phongBan?.TenPhongBan ?? "Chưa phân phòng";
 
-                    // 2. Lấy danh sách lương của nhân viên để hiển thị và vẽ biểu đồ
+                    // 2. Lấy danh sách lương
                     var luongList = _db.Luongs
                         .Where(l => l.MaNhanVien == nhanVien.MaNhanVien)
                         .OrderByDescending(l => l.Nam).ThenByDescending(l => l.Thang)
                         .ToList();
 
-                    // Hiển thị số lương tháng gần nhất
                     var luongMoiNhat = luongList.FirstOrDefault();
                     txtLuong.Text = luongMoiNhat != null ? luongMoiNhat.TongLuong.ToString("N0") : "0";
 
-                    // 3. VẼ BIỂU ĐỒ (Lấy 6 tháng gần nhất)
+                    // 3. Vẽ biểu đồ 6 tháng
                     var dataChart = luongList.Take(6).OrderBy(l => l.Nam).ThenBy(l => l.Thang).ToList();
                     DrawChart(dataChart);
 
-                    // 4. HIỂN THỊ TRẠNG THÁI NGHỈ PHÉP (MỚI THÊM)
-                    // Lấy danh sách các đơn nghỉ phép của chính nhân viên này
+                    // 4. Trạng thái nghỉ phép gần đây
                     var listNghiPhep = _db.NghiPhep
                         .Where(np => np.NhanVienId == nhanVien.MaNhanVien)
                         .OrderByDescending(np => np.NgayBatDau)
-                        .Take(5) // Hiển thị 5 đơn gần nhất
+                        .Take(5)
                         .ToList();
 
                     ItemsTrangThaiNghiPhep.ItemsSource = listNghiPhep;
@@ -78,7 +92,6 @@ namespace ql_nhanSW.Form.TrangChu
             }
         }
 
-        // Hàm xử lý dữ liệu và nạp vào ItemsControl biểu đồ
         private void DrawChart(List<Luong> list)
         {
             if (list == null || list.Count == 0) return;
@@ -95,7 +108,6 @@ namespace ql_nhanSW.Form.TrangChu
             }).ToList();
         }
 
-        // Xử lý sự kiện Tải file minh chứng
         private void BtnUpload_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
@@ -122,7 +134,6 @@ namespace ql_nhanSW.Form.TrangChu
             }
         }
 
-        // Xử lý sự kiện Gửi đơn nghỉ phép
         private void BtnGuiDon_Click(object sender, RoutedEventArgs e)
         {
             if (dpStart.SelectedDate == null || dpEnd.SelectedDate == null || cbLoaiNghi.SelectedItem == null)
@@ -143,7 +154,6 @@ namespace ql_nhanSW.Form.TrangChu
                     return;
                 }
 
-                // Tạo đối tượng nghỉ phép mới
                 NghiPhep donMoi = new NghiPhep
                 {
                     NhanVienId = nhanVien.MaNhanVien,
@@ -154,16 +164,13 @@ namespace ql_nhanSW.Form.TrangChu
                     TrangThai = "Chờ duyệt"
                 };
 
-                // Lưu vào database (Sử dụng NghiPheps theo cấu trúc chuẩn)
                 _db.NghiPhep.Add(donMoi);
                 _db.SaveChanges();
 
                 MessageBox.Show("Gửi đơn thành công! Đang chờ quản trị viên phê duyệt.", "Thành công");
 
-                // Làm mới lại giao diện để hiển thị đơn vừa gửi trong danh sách trạng thái
+                // Cập nhật lại danh sách hiển thị ở Dashboard
                 LoadPersonalDashboard();
-
-                // Reset form nhập liệu
                 txtFilePath.Clear();
                 duongDanMinhChung = "";
                 dpStart.SelectedDate = null;

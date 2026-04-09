@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,10 +41,10 @@ namespace ql_nhanSW.Form.TrangChu
                 {
                     // Thông tin tài khoản
                     txtTenDangNhap.Text = tk.TenDangNhap;
-                    txtTenDangNhap.IsReadOnly = true; // Khóa không cho sửa Tên đăng nhập
+                    txtTenDangNhap.IsReadOnly = true;
 
                     txtEmail.Text = tk.Email;
-                    txtEmail.IsReadOnly = true; // Thường email cũng không cho tự sửa (tùy nghiệp vụ)
+                    txtEmail.IsReadOnly = true;
 
                     txtSoDienThoai.Text = tk.SoDienThoai;
 
@@ -71,7 +72,7 @@ namespace ql_nhanSW.Form.TrangChu
         }
 
         // =================================================================
-        // 2. HÀM CHỌN ẢNH ĐẠI DIỆN MỚI
+        // 2. HÀM CHỌN ẢNH ĐẠI BIỂN MỚI
         // =================================================================
         private void btnChonAnh_Click(object sender, RoutedEventArgs e)
         {
@@ -82,17 +83,16 @@ namespace ql_nhanSW.Form.TrangChu
             {
                 _duongDanAnhMoi = openFileDialog.FileName;
 
-                // Hiển thị tạm ảnh vừa chọn lên giao diện (chưa lưu vào DB)
+                // Hiển thị tạm ảnh vừa chọn lên giao diện
                 imgAvatar.Source = new BitmapImage(new Uri(_duongDanAnhMoi));
             }
         }
 
         // =================================================================
-        // 3. HÀM LƯU CẬP NHẬT (ĐÃ SỬA LỖI ĐỂ AI CŨNG LƯU ĐƯỢC)
+        // 3. HÀM LƯU CẬP NHẬT & ĐÁNH DẤU ĐỂ ẨN THÔNG BÁO TRANG CHỦ
         // =================================================================
         private void btnLuu_Click(object sender, RoutedEventArgs e)
         {
-            // Kiểm tra an toàn xem có mất session không
             if (SessionManager.CurrentUser == null)
             {
                 MessageBox.Show("Vui lòng đăng nhập lại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -105,39 +105,26 @@ namespace ql_nhanSW.Form.TrangChu
                 var tk = _db.TaiKhoans.FirstOrDefault(t => t.MaTaiKhoan == maTK);
                 var nv = _db.NhanViens.FirstOrDefault(n => n.MaTaiKhoan == maTK);
 
-                // Chỉ cần có tài khoản là được phép lưu (không ép buộc phải có hồ sơ NhanVien)
                 if (tk != null)
                 {
-                    // --- 3.1. XỬ LÝ LƯU ẢNH VÀO C:\AvataNhanSu ---
+                    // --- 3.1. XỬ LÝ LƯU ẢNH ---
                     if (!string.IsNullOrEmpty(_duongDanAnhMoi))
                     {
                         string thuMucLuu = @"C:\AvataNhanSu";
+                        if (!Directory.Exists(thuMucLuu)) Directory.CreateDirectory(thuMucLuu);
 
-                        // Nếu thư mục chưa tồn tại trên ổ C thì tự động tạo mới
-                        if (!Directory.Exists(thuMucLuu))
-                        {
-                            Directory.CreateDirectory(thuMucLuu);
-                        }
-
-                        // Lấy tên file gốc (VD: anh1.png)
                         string tenFileGoc = Path.GetFileName(_duongDanAnhMoi);
-
-                        // Ghép thêm Mã tài khoản vào tên file để tránh 2 người up ảnh trùng tên nhau
                         string tenFileMoi = $"TK{maTK}_{tenFileGoc}";
                         string duongDanLuu = Path.Combine(thuMucLuu, tenFileMoi);
 
-                        // Copy file ảnh từ máy vào thư mục C:\AvataNhanSu (cho phép ghi đè)
                         File.Copy(_duongDanAnhMoi, duongDanLuu, true);
-
-                        // Cập nhật đường dẫn mới vào DB
                         tk.AnhDaiDien = duongDanLuu;
                     }
 
-                    // --- 3.2. CẬP NHẬT THÔNG TIN BẢNG TaiKhoan ---
+                    // --- 3.2. CẬP NHẬT THÔNG TIN ---
                     tk.SoDienThoai = txtSoDienThoai.Text.Trim();
                     tk.NgayCapNhat = DateTime.Now;
 
-                    // --- 3.3. CẬP NHẬT THÔNG TIN BẢNG NhanVien (NẾU TÀI KHOẢN ĐÓ ĐÃ CÓ HỒ SƠ) ---
                     if (nv != null)
                     {
                         nv.GioiTinh = (rdoNam.IsChecked == true) ? "Nam" : "Nữ";
@@ -148,14 +135,13 @@ namespace ql_nhanSW.Form.TrangChu
                     // --- LƯU XUỐNG DATABASE ---
                     _db.SaveChanges();
 
-                    // Cập nhật lại biến toàn cục Session
+                    // --- ĐÁNH DẤU ĐÃ CẬP NHẬT (Để ẩn thông báo ở Bảng Điều Khiển) ---
+                    GhiNhanDaCapNhat();
+
+                    // Cập nhật lại session
                     SessionManager.CurrentUser = tk;
 
                     MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Không tìm thấy thông tin tài khoản trong hệ thống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
@@ -164,12 +150,26 @@ namespace ql_nhanSW.Form.TrangChu
             }
         }
 
+        // Hàm tạo file đánh dấu trong bộ nhớ ứng dụng
+        private void GhiNhanDaCapNhat()
+        {
+            try
+            {
+                using (var store = IsolatedStorageFile.GetUserStoreForAssembly())
+                using (var stream = new IsolatedStorageFileStream("DaCapNhatThongTin.txt", FileMode.Create, store))
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("true");
+                }
+            }
+            catch { /* Tránh gây treo ứng dụng nếu lỗi file hệ thống */ }
+        }
+
         // =================================================================
         // 4. HÀM HỦY BỎ
         // =================================================================
         private void btnHuy_Click(object sender, RoutedEventArgs e)
         {
-            // Reset lại giao diện bằng cách Load lại dữ liệu từ DB
             _duongDanAnhMoi = "";
             LoadData();
         }

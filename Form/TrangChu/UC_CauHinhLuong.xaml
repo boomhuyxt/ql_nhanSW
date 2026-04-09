@@ -5,31 +5,31 @@
              FontFamily="Segoe UI">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24,20,24,24">
-            <TextBlock Text="Tính toán Lương nhân sự"
+            <TextBlock Text="Tính toán Lương nhân sự" 
                        Foreground="#1E1B4B" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"/>
-            <TextBlock Text="Quản lý, điều chỉnh và phê duyệt chi trả lương cho nhân sự toàn hệ thống. Mọi thay đổi sẽ được ghi nhật ký hệ thống."
+            <TextBlock Text="Quản lý, điều chỉnh và phê duyệt chi trả lương cho nhân sự toàn hệ thống. Mọi thay đổi sẽ được ghi nhật ký hệ thống." 
                        Foreground="#64748B" FontSize="12" Margin="0,0,0,20" TextWrapping="Wrap"/>
 
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="320"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1"
+                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" 
                             CornerRadius="12" Padding="16" Margin="0,0,0,14">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
                                 <TextBlock Text="👤" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Chọn Nhân viên cần tính lương"
+                                <TextBlock Text="Chọn Nhân viên cần tính lương" 
                                            Foreground="#4C1D95" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <Border Background="#FDFBFF" BorderBrush="#DDD6FE" BorderThickness="1"
+                            <Border Background="#FDFBFF" BorderBrush="#DDD6FE" BorderThickness="1" 
                                     CornerRadius="8" Margin="0,0,0,14">
-                                <ComboBox x:Name="cmbNhanVien"
+                                <ComboBox x:Name="cmbNhanVien" 
                                           Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
                                           Padding="8" FontSize="13" Foreground="#1E1B4B"
                                           SelectionChanged="cmbNhanVien_SelectionChanged">
@@ -49,14 +49,14 @@
 
                             <Border Background="#F5F3FF" BorderBrush="#E9D5FF" BorderThickness="1" CornerRadius="10" Padding="12">
                                 <StackPanel Orientation="Horizontal">
-                                    <Border Width="42" Height="42" CornerRadius="21"
+                                    <Border Width="42" Height="42" CornerRadius="21" 
                                             Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1.5">
-                                        <TextBlock Text="HR" Foreground="White" FontSize="13" FontWeight="Bold"
+                                        <TextBlock Text="HR" Foreground="White" FontSize="13" FontWeight="Bold" 
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
                                         <TextBlock x:Name="txtHoTen" Text="Chưa chọn nhân viên" Foreground="#1E1B4B" FontSize="13" FontWeight="Bold"/>
-                                        <TextBlock x:Name="txtMaNV" Text="MNV: -- | Giới tính: --"
+                                        <TextBlock x:Name="txtMaNV" Text="MNV: -- | Giới tính: --" 
                                                    Foreground="#7C3AED" FontSize="10" Margin="0,3,0,0" FontWeight="Medium"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -64,12 +64,12 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1"
+                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" 
                             CornerRadius="12" Padding="16">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                                 <TextBlock Text="⚡" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Nhập thông tin tính lương"
+                                <TextBlock Text="Nhập thông tin tính lương" 
                                            Foreground="#4C1D95" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
 
@@ -118,9 +118,9 @@
                                 </Border>
                             </Grid>
 
-                            <Button x:Name="btnTinhLuong" Content="🔢 Tính Lương (Áp dụng Thuế &amp; BH)"
+                            <Button x:Name="btnTinhLuong" Content="🔢 Tính Lương (Áp dụng Thuế &amp; BH)" 
                                     Background="#7C3AED" Foreground="White" FontWeight="SemiBold"
-                                    Padding="20,10" Click="btnTinhLuong_Click" Height="43"/>
+                                    Padding="20,10" Click="btnTinhLuong_Click" Height="43" Cursor="Hand"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,20,0,16">
                                 <TextBlock Text="📊" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
@@ -159,9 +159,9 @@
 
                             <Grid>
                                 <StackPanel>
-                                    <TextBlock Text="Tổng lương thực nhận"
+                                    <TextBlock Text="Tổng lương thực nhận" 
                                                Foreground="#1E1B4B" FontSize="16" FontWeight="Bold" Margin="0,0,0,4"/>
-                                    <TextBlock Text="Đã khấu trừ 10.5% BH và 10% Thuế TNCN."
+                                    <TextBlock Text="Đã khấu trừ 10.5% BH và 10% Thuế TNCN." 
                                                Foreground="#64748B" FontSize="11"/>
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
@@ -172,10 +172,10 @@
 
                             <Button x:Name="btnXacNhanXuatLuong" Background="#7C3AED" BorderThickness="0" Cursor="Hand" 
                                     HorizontalAlignment="Stretch" Padding="0" Margin="0,20,0,8" 
-                                    Click="btnXacNhanXuatLuong_Click" Height="38">
+                                    Click="btnXacNhanXuatLuong_Click" Height="45">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="15,10">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
@@ -186,8 +186,8 @@
                                     </ControlTemplate>
                                 </Button.Template>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="⚙ " Foreground="White" FontSize="13"/>
-                                    <TextBlock Text="Xác nhận &amp; Lưu vào hệ thống" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="⚙ " Foreground="White" FontSize="14"/>
+                                    <TextBlock Text="Xác nhận &amp; Lưu vào hệ thống" Foreground="White" FontSize="14" FontWeight="SemiBold"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -195,30 +195,36 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2">
-                    <Border Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1"
-                            CornerRadius="12" Padding="16" Margin="0,0,0,14">
+                    <Border Background="#7C3AED" BorderBrush="#A855F7" BorderThickness="1" 
+                            CornerRadius="12" Padding="20" Margin="0,0,0,14">
                         <StackPanel>
-                            <TextBlock Text="THỐNG KÊ CHI TRẢ"
+                            <TextBlock Text="THỐNG KÊ CHI TRẢ" 
                                        Foreground="White" FontSize="10" FontWeight="Bold" Margin="0,0,0,14" Opacity="0.9"/>
-                            <TextBlock Text="Quỹ lương tháng hiện tại:" Foreground="#DDD6FE" FontSize="12" Margin="0,0,0,4"/>
-                            <TextBlock Text="Đang cập nhật..." Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,0,12"/>
-                            <Border Height="6" CornerRadius="3" Background="#5B21B6">
-                                <Border HorizontalAlignment="Left" Width="60" CornerRadius="3" Height="6" Background="#4ADE80"/>
+
+                            <TextBlock Text="Quỹ lương tháng hiện tại:" Foreground="#DDD6FE" FontSize="13" Margin="0,0,0,6"/>
+
+                            <TextBlock x:Name="txtTongQuyLuong" Text="0 VND" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,16"/>
+
+                            <TextBlock Text="Tiến độ ngân sách dự kiến:" Foreground="#DDD6FE" FontSize="11" Margin="0,0,0,8"/>
+                            <Border Height="8" CornerRadius="4" Background="#5B21B6">
+                                <Border x:Name="rectProgress" HorizontalAlignment="Left" Width="0" CornerRadius="4" Height="8" Background="#4ADE80"/>
                             </Border>
                         </StackPanel>
                     </Border>
 
-                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1"
+                    <Border Background="#FFFFFF" BorderBrush="#E9D5FF" BorderThickness="1" 
                             CornerRadius="12" Padding="16">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                 <TextBlock Text="📝" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
                                 <TextBlock Text="Ghi chú nhanh" Foreground="#4C1D95" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <Border Background="#F5F3FF" BorderBrush="#7C3AED" BorderThickness="0,0,0,3" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                <TextBlock Text="Hệ thống tự động tính bảo hiểm 10.5% và thuế 10% theo TinhLuongService."
-                                           Foreground="#6D28D9" FontSize="11" TextWrapping="Wrap"/>
+                            <Border Background="#F5F3FF" BorderBrush="#7C3AED" BorderThickness="0,0,0,3" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                <TextBlock Text="Hệ thống tự động tính bảo hiểm 10.5% và thuế 10% dựa trên tổng thu nhập (Lương CB + Thưởng) thông qua TinhLuongService." 
+                                           Foreground="#6D28D9" FontSize="11" TextWrapping="Wrap" LineHeight="16"/>
                             </Border>
+                            <TextBlock Text="* Lưu ý: Khi nhấn Xác nhận, dữ liệu cũ của nhân viên trong tháng này sẽ bị ghi đè." 
+                                       Foreground="#94A3B8" FontSize="10" TextWrapping="Wrap" FontStyle="Italic"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

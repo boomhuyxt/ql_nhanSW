@@ -7,8 +7,6 @@ using System.Windows.Media;
 using ql_nhanSW.Models;
 using Microsoft.Win32;
 using System.IO;
-// using System.Windows.Media.Imaging; // not needed
-using System.Windows.Media;
 using OfficeOpenXml;
 
 // Giải quyết xung đột namespace bằng Alias [cite: 1]
@@ -23,11 +21,6 @@ namespace ql_nhanSW.Form.TrangChu
         private readonly AppDbContext _db = new AppDbContext();
         // Sử dụng dynamic để chứa dữ liệu kết hợp từ NhanVien và TaiKhoan 
         private List<dynamic> dsHienThi;
-        // Lưu dữ liệu cuối cùng được hiển thị trên biểu đồ để xuất file
-        private List<double> lastLuongValues = new List<double>();
-        private List<string> lastLuongLabels = new List<string>();
-        private List<double> lastChuyenCanValues = new List<double>();
-        private List<string> lastChuyenCanLabels = new List<string>();
 
         public UC_BCTK()
         {
@@ -92,18 +85,13 @@ namespace ql_nhanSW.Form.TrangChu
         {
             // Vẽ biểu đồ Lương từ database [cite: 8]
             var luongs = _db.Luongs.Where(l => l.MaNhanVien == maNV).OrderBy(l => l.Nam).ThenBy(l => l.Thang).Take(6).ToList();
-            lastLuongValues = luongs.Select(l => (double)l.TongLuong).ToList();
-            lastLuongLabels = luongs.Select(l => $"T{l.Thang}").ToList();
-            DrawLineChart(CanvasLuong, PolyLuong, lastLuongValues,
-                          lastLuongLabels, "#16A34A", true);
+            DrawLineChart(CanvasLuong, PolyLuong, luongs.Select(l => (double)l.TongLuong).ToList(),
+                          luongs.Select(l => $"T{l.Thang}").ToList(), "#16A34A", true);
 
             // Vẽ biểu đồ Chuyên cần từ database [cite: 9]
             var chams = _db.ChamCongs.Where(c => c.MaNhanVien == maNV).OrderBy(c => c.NgayLamViec).Take(6).ToList();
-            // Nếu không có dữ liệu chấm công, giữ mặc định rỗng
-            lastChuyenCanValues = chams.Any() ? chams.Select(c => 100.0).ToList() : new List<double>();
-            lastChuyenCanLabels = chams.Select(c => c.NgayLamViec.ToString("dd/MM")).ToList();
-            DrawLineChart(CanvasChuyenCan, PolyChuyenCan, lastChuyenCanValues,
-                          lastChuyenCanLabels, "#7C3AED", false);
+            DrawLineChart(CanvasChuyenCan, PolyChuyenCan, chams.Select(c => 100.0).ToList(),
+                          chams.Select(c => c.NgayLamViec.ToString("dd/MM")).ToList(), "#7C3AED", false);
         }
 
         // Chỉ định rõ namespace System.Windows.Controls để tránh lỗi Ambiguous 
@@ -145,10 +133,8 @@ namespace ql_nhanSW.Form.TrangChu
         {
             Button btn = sender as Button;
             string reportType = (btn.Name == "BtnExportChuyenCan") ? "Chuyen_Can" : "Luong";
-            // Lấy ComboBox tương ứng theo tên report để tránh NullReference khi cấu trúc visual tree khác
-            ComboBox cbExport = (reportType == "Chuyen_Can") ? cbExportChuyenCan : cbExportLuong;
-            int sel = (cbExport != null && cbExport.SelectedIndex >= 0) ? cbExport.SelectedIndex : 0;
-            string extension = (sel == 0) ? "xlsx" : "pdf";
+            ComboBox cbExport = (btn.Parent as StackPanel).Children.OfType<ComboBox>().FirstOrDefault();
+            string extension = (cbExport.SelectedIndex == 0) ? "xlsx" : "pdf";
 
             SaveFileDialog sfd = new SaveFileDialog
             {
@@ -181,28 +167,6 @@ namespace ql_nhanSW.Form.TrangChu
                 var ws = package.Workbook.Worksheets.Add("Bao cao");
                 ws.Cells[1, 1].Value = "BAO CAO " + type.ToUpper();
                 ws.Cells[2, 1].Value = "Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy");
-
-                // Ghi dữ liệu tương ứng với loại báo cáo
-                if (type == "Luong" && lastLuongValues.Any())
-                {
-                    ws.Cells[4, 1].Value = "Thời gian";
-                    ws.Cells[4, 2].Value = "Giá trị";
-                    for (int i = 0; i < lastLuongValues.Count; i++)
-                    {
-                        ws.Cells[5 + i, 1].Value = lastLuongLabels[i];
-                        ws.Cells[5 + i, 2].Value = lastLuongValues[i];
-                    }
-                }
-                else if (type == "Chuyen_Can" && lastChuyenCanValues.Any())
-                {
-                    ws.Cells[4, 1].Value = "Ngày";
-                    ws.Cells[4, 2].Value = "Tỷ lệ (%)";
-                    for (int i = 0; i < lastChuyenCanValues.Count; i++)
-                    {
-                        ws.Cells[5 + i, 1].Value = lastChuyenCanLabels[i];
-                        ws.Cells[5 + i, 2].Value = lastChuyenCanValues[i];
-                    }
-                }
                 package.SaveAs(new FileInfo(path));
             }
         }
@@ -218,22 +182,6 @@ namespace ql_nhanSW.Form.TrangChu
                    // Dùng iTextElement để tạo đoạn văn [cite: 1]
                     doc.Add(new iTextElement.Paragraph("BAO CAO " + type.ToUpper()).SetFontSize(14));
                     doc.Add(new iTextElement.Paragraph("Ngay xuat: " + DateTime.Now.ToString("dd/MM/yyyy")));
-
-                    // Thêm dữ liệu chi tiết
-                    if (type == "Luong" && lastLuongValues.Any())
-                    {
-                        foreach (var i in Enumerable.Range(0, lastLuongValues.Count))
-                        {
-                            doc.Add(new iTextElement.Paragraph($"{lastLuongLabels[i]} : {lastLuongValues[i]}") );
-                        }
-                    }
-                    else if (type == "Chuyen_Can" && lastChuyenCanValues.Any())
-                    {
-                        foreach (var i in Enumerable.Range(0, lastChuyenCanValues.Count))
-                        {
-                            doc.Add(new iTextElement.Paragraph($"{lastChuyenCanLabels[i]} : {lastChuyenCanValues[i]}%") );
-                        }
-                    }
                     doc.Close();
                 }
             }

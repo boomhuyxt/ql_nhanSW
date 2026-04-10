@@ -31,7 +31,6 @@ namespace ql_nhanSW.Form.TrangChu
         {
             try
             {
-                // Thống kê dựa trên trạng thái tài khoản
                 txtTongNhanSu.Text = _db.TaiKhoans.Count(tk => tk.TrangThai == 1).ToString("N0");
                 txtTuyenDung.Text = _db.TaiKhoans.Count(tk => tk.TrangThai == 0).ToString("N0");
 
@@ -69,7 +68,6 @@ namespace ql_nhanSW.Form.TrangChu
 
         private void UpdateCharts(int maNV)
         {
-            // 1. Vẽ biểu đồ Lương (Giữ nguyên logic cũ)
             var luongs = _db.Luongs
                 .Where(l => l.MaNhanVien == maNV)
                 .OrderBy(l => l.Nam).ThenBy(l => l.Thang)
@@ -77,24 +75,20 @@ namespace ql_nhanSW.Form.TrangChu
             DrawLineChart(CanvasLuong, PolyLuong, luongs.Select(l => (double)l.TongLuong).ToList(),
                           luongs.Select(l => $"T{l.Thang}").ToList(), "#16A34A", true);
 
-            // 2. Vẽ biểu đồ Chuyên cần dựa trên 26 ngày/tháng
-            // Lấy dữ liệu chấm công của nhân viên, nhóm theo Tháng và Năm
             var duLieuChamCong = _db.ChamCongs
                 .Where(c => c.MaNhanVien == maNV)
-                .ToList() // Tải về memory để xử lý GroupBy theo thời gian dễ hơn
+                .ToList()
                 .GroupBy(c => new { c.NgayLamViec.Month, c.NgayLamViec.Year })
                 .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
-                .Take(6) // Lấy 6 tháng gần nhất có dữ liệu
+                .Take(6)
                 .Select(g => new {
                     ThangNam = $"T{g.Key.Month}/{g.Key.Year % 100}",
-                    TiLe = (double)g.Count() / 26 * 100 // Công thức: (Số ngày / 26) * 100
+                    TiLe = (double)g.Count() / 26 * 100
                 }).ToList();
 
-            // Chuẩn bị danh sách giá trị và nhãn
             List<double> valuesCC = duLieuChamCong.Select(x => x.TiLe).ToList();
             List<string> labelsCC = duLieuChamCong.Select(x => x.ThangNam).ToList();
 
-            // Gọi hàm vẽ biểu đồ chuyên cần
             DrawLineChart(CanvasChuyenCan, PolyChuyenCan, valuesCC, labelsCC, "#7C3AED", false);
         }
 
@@ -112,7 +106,7 @@ namespace ql_nhanSW.Form.TrangChu
                 double x = i * stepX + 30;
                 double y = canvasH - (values[i] / max * 130);
                 points.Add(new Point(x, y));
-                string displayVal = isMoney ? (values[i] / 1000000).ToString("N1") + "tr" : values[i] + "%";
+                string displayVal = isMoney ? (values[i] / 1000000).ToString("N1") + "tr" : values[i].ToString("N1") + "%";
                 TextBlock txtVal = new TextBlock { Text = displayVal, FontSize = 9, FontWeight = FontWeights.Bold, Foreground = brush };
                 System.Windows.Controls.Canvas.SetLeft(txtVal, x - 10);
                 System.Windows.Controls.Canvas.SetTop(txtVal, y - 18);
@@ -162,9 +156,63 @@ namespace ql_nhanSW.Form.TrangChu
             using (var package = new ExcelPackage())
             {
                 var ws = package.Workbook.Worksheets.Add("Báo cáo");
-                ws.Cells[1, 1].Value = "BÁO CÁO: " + type.ToUpper();
-                ws.Cells[1, 1].Style.Font.Bold = true;
-                ws.Cells[2, 1].Value = "Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy");
+                int row = 4;
+
+                if (type == "Luong")
+                {
+                    ws.Cells[1, 1].Value = "BÁO CÁO CHI TRẢ LƯƠNG NHÂN VIÊN";
+                    ws.Cells[1, 1].Style.Font.Bold = true;
+                    ws.Cells[2, 1].Value = "Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+
+                    string[] headers = { "Họ Tên", "Email", "Giới tính", "Lương CB", "Thưởng", "Tổng Lương" };
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        ws.Cells[row, i + 1].Value = headers[i];
+                        ws.Cells[row, i + 1].Style.Font.Bold = true;
+                        ws.Cells[row, i + 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        ws.Cells[row, i + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    }
+
+                    var data = (from l in _db.Luongs
+                                join nv in _db.NhanViens on l.MaNhanVien equals nv.MaNhanVien
+                                join tk in _db.TaiKhoans on nv.MaTaiKhoan equals tk.MaTaiKhoan
+                                select new { nv.HoTen, tk.Email, nv.GioiTinh, l.LuongCoBan, l.Thuong, l.TongLuong }).ToList();
+
+                    foreach (var item in data)
+                    {
+                        row++;
+                        ws.Cells[row, 1].Value = item.HoTen;
+                        ws.Cells[row, 2].Value = item.Email;
+                        ws.Cells[row, 3].Value = item.GioiTinh;
+                        ws.Cells[row, 4].Value = item.LuongCoBan;
+                        ws.Cells[row, 5].Value = item.Thuong;
+                        ws.Cells[row, 6].Value = item.TongLuong;
+                        ws.Cells[row, 4, row, 6].Style.Numberformat.Format = "#,##0";
+                    }
+                }
+                else
+                {
+                    ws.Cells[1, 1].Value = "BÁO CÁO CHI TIẾT CHUYÊN CẦN";
+                    ws.Cells[1, 1].Style.Font.Bold = true;
+
+                    string[] headers = { "Mã NV", "Ngày Làm", "Giờ Vào", "Giờ Ra", "Tỷ lệ tháng (%)" };
+                    for (int i = 0; i < headers.Length; i++) ws.Cells[row, i + 1].Value = headers[i];
+
+                    var data = _db.ChamCongs.OrderByDescending(c => c.NgayLamViec).ToList();
+                    foreach (var item in data)
+                    {
+                        row++;
+                        ws.Cells[row, 1].Value = item.MaNhanVien;
+                        ws.Cells[row, 2].Value = item.NgayLamViec.ToString("dd/MM/yyyy");
+                        ws.Cells[row, 3].Value = item.GioVao?.ToString(@"hh\:mm") ?? "--:--";
+                        ws.Cells[row, 4].Value = item.GioRa?.ToString(@"hh\:mm") ?? "--:--";
+
+                        var countInMonth = _db.ChamCongs.Count(c => c.MaNhanVien == item.MaNhanVien && c.NgayLamViec.Month == item.NgayLamViec.Month);
+                        ws.Cells[row, 5].Value = Math.Round(((double)countInMonth / 26) * 100, 1) + "%";
+                    }
+                }
+
+                ws.Cells.AutoFitColumns();
                 package.SaveAs(new FileInfo(path));
             }
         }
@@ -178,17 +226,53 @@ namespace ql_nhanSW.Form.TrangChu
                     using (var pdf = new iTextPdf.PdfDocument(writer))
                     {
                         var doc = new iTextLayout.Document(pdf);
-
-                        // CÁCH SỬA LỖI CS0117: Sử dụng font in đậm chuẩn từ thư viện
                         var fontBold = iText.Kernel.Font.PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD);
 
-                        iTextElement.Paragraph title = new iTextElement.Paragraph("BAO CAO THONG KE: " + type.ToUpper())
-                            .SetFontSize(18)
-                            .SetFont(fontBold);
-
-                        doc.Add(title);
+                        doc.Add(new iTextElement.Paragraph("BAO CAO " + type.ToUpper())
+                            .SetFontSize(18).SetFont(fontBold));
                         doc.Add(new iTextElement.Paragraph("Ngay xuat: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm")));
-                        doc.Add(new iTextElement.Paragraph("-------------------------------------------"));
+
+                        if (type == "Luong")
+                        {
+                            iTextLayout.Element.Table table = new iTextLayout.Element.Table(5).UseAllAvailableWidth();
+                            table.AddHeaderCell("Ho Ten");
+                            table.AddHeaderCell("GT");
+                            table.AddHeaderCell("Luong CB");
+                            table.AddHeaderCell("Thuong");
+                            table.AddHeaderCell("Tong");
+
+                            var data = (from l in _db.Luongs
+                                        join nv in _db.NhanViens on l.MaNhanVien equals nv.MaNhanVien
+                                        select new { nv.HoTen, nv.GioiTinh, l.LuongCoBan, l.Thuong, l.TongLuong }).ToList();
+
+                            foreach (var item in data)
+                            {
+                                table.AddCell(item.HoTen);
+                                table.AddCell(item.GioiTinh);
+                                table.AddCell(item.LuongCoBan.ToString("N0"));
+                                table.AddCell(item.Thuong.ToString("N0"));
+                                table.AddCell(item.TongLuong.ToString("N0"));
+                            }
+                            doc.Add(table);
+                        }
+                        else
+                        {
+                            iTextLayout.Element.Table table = new iTextLayout.Element.Table(4).UseAllAvailableWidth();
+                            table.AddHeaderCell("Ma NV");
+                            table.AddHeaderCell("Ngay");
+                            table.AddHeaderCell("Vao");
+                            table.AddHeaderCell("Ra");
+
+                            var data = _db.ChamCongs.OrderByDescending(c => c.NgayLamViec).Take(50).ToList();
+                            foreach (var item in data)
+                            {
+                                table.AddCell(item.MaNhanVien.ToString());
+                                table.AddCell(item.NgayLamViec.ToString("dd/MM"));
+                                table.AddCell(item.GioVao?.ToString(@"hh\:mm") ?? "-");
+                                table.AddCell(item.GioRa?.ToString(@"hh\:mm") ?? "-");
+                            }
+                            doc.Add(table);
+                        }
 
                         doc.Close();
                     }

@@ -5,6 +5,8 @@ using System.Windows.Input;
 using ql_nhanSW.Models;
 using ql_nhanSW.share;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ql_nhanSW.Form
 {
@@ -17,14 +19,28 @@ namespace ql_nhanSW.Form
             InitializeComponent();
         }
 
-        // Cho phép kéo giữ cửa sổ
+        // Hàm hỗ trợ băm chuỗi thành SHA-256
+        private string ComputeSha256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();
         }
 
-        #region Chuyển đổi giao diện Đăng nhập/Đăng ký
+        #region Chuyển đổi giao diện
         private void SwitchRegister_Click(object sender, RoutedEventArgs e)
         {
             SignInPanel.Visibility = Visibility.Collapsed;
@@ -43,52 +59,68 @@ namespace ql_nhanSW.Form
         {
             try
             {
-                // Lấy Email từ ô nhập liệu mới (TxtEmail)
                 string email = TxtEmail.Text.Trim();
                 string password = TxtPassword.Password;
 
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 {
-                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
                     return;
                 }
 
-                // Tìm tài khoản bằng Email thay vì TenDangNhap
+                // 1. Tìm tài khoản theo Email trước để lấy chuỗi mật khẩu trong DB ra kiểm tra
                 var user = _db.TaiKhoans
                     .Include(t => t.TaiKhoanVaiTro)
                         .ThenInclude(rv => rv.VaiTro)
-                    .FirstOrDefault(u => u.Email == email && u.MatKhauHash == password);
+                    .FirstOrDefault(u => u.Email == email);
 
                 if (user != null)
                 {
-                    // ... (Giữ nguyên các logic phân quyền và chuyển trang phía sau)
-                    var roles = user.TaiKhoanVaiTro.Select(rv => rv.VaiTro.MaCode).ToList();
-                    SessionManager.CurrentUser = user;
-                    SessionManager.CurrentRoles = roles;
+                    bool isPasswordCorrect = false;
+                    string hashedInput = ComputeSha256Hash(password);
 
-                    if (user.TrangThai.GetValueOrDefault() != 0 && roles.Any())
+                    // 2. KIỂM TRA ĐA LUỒNG:
+                    // TH1: So sánh với mã đã hash SHA-256
+                    // TH2: So sánh trực tiếp với mật khẩu chưa hash (plaintext)
+                    if (user.MatKhauHash == hashedInput || user.MatKhauHash == password)
                     {
-                        var main = new ql_nhanSW.TrangChu();
-                        main.Show();
-                        this.Close();
+                        isPasswordCorrect = true;
+                    }
+
+                    if (isPasswordCorrect)
+                    {
+                        var roles = user.TaiKhoanVaiTro.Select(rv => rv.VaiTro.MaCode).ToList();
+                        SessionManager.CurrentUser = user;
+                        SessionManager.CurrentRoles = roles;
+
+                        if (user.TrangThai.GetValueOrDefault() != 0 && roles.Any())
+                        {
+                            var main = new ql_nhanSW.TrangChu();
+                            main.Show();
+                            this.Close();
+                        }
+                        else
+                        {
+                            var loadingWindow = new ql_nhanSW.Form.LoadingOverlay();
+                            loadingWindow.Show();
+                            this.Close();
+                        }
                     }
                     else
                     {
-                        var loadingWindow = new ql_nhanSW.Form.LoadingOverlay();
-                        loadingWindow.Show();
-                        this.Close();
+                        MessageBox.Show("Mật khẩu không chính xác!");
+                        TxtPassword.Clear();
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Email hoặc mật khẩu không chính xác!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Email không tồn tại!");
                     TxtPassword.Clear();
                 }
             }
             catch (Exception ex)
             {
-                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                MessageBox.Show("Lỗi hệ thống: " + innerMessage, "Thông báo lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi hệ thống: " + ex.Message);
             }
         }
         #endregion
@@ -103,68 +135,59 @@ namespace ql_nhanSW.Form
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Tên đăng nhập và mật khẩu không được để trống!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng điền đủ thông tin!");
                 return;
             }
             if (password != confirmPass)
             {
-                MessageBox.Show("Mật khẩu xác nhận không khớp!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Mật khẩu không khớp!");
                 return;
             }
 
             try
             {
-                // 1. Kiểm tra tên đăng nhập đã tồn tại chưa
                 if (_db.TaiKhoans.Any(t => t.TenDangNhap == username))
                 {
-                    MessageBox.Show("Tên đăng nhập đã tồn tại!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Tên đăng nhập đã tồn tại!");
                     return;
                 }
 
-                // 2. Tạo tài khoản mới
+                // Khi đăng ký mới, chúng ta LUÔN LUÔN băm mật khẩu để đảm bảo bảo mật
+                string hashedPw = ComputeSha256Hash(password);
+
                 var newAccount = new TaiKhoan
                 {
                     TenDangNhap = username,
-                    MatKhauHash = password,
+                    MatKhauHash = hashedPw,
                     Email = email,
-                    TrangThai = 0, // Chờ duyệt
+                    TrangThai = 0,
                     NgayTao = DateTime.Now,
-
-                    // SỬA LỖI TẠI ĐÂY: Gán giá trị mặc định cho các cột NOT NULL
                     AnhDaiDien = "default_avatar.png",
                     SoDienThoai = ""
                 };
 
                 _db.TaiKhoans.Add(newAccount);
-                _db.SaveChanges(); // Lưu để SQL sinh ra MaTaiKhoan
+                _db.SaveChanges();
 
-                // 3. Tạo hồ sơ nhân viên đi kèm
                 var newEmployee = new NhanVien
                 {
                     MaTaiKhoan = newAccount.MaTaiKhoan,
                     HoTen = username,
                     NgayVaoLam = DateTime.Now,
                     TrangThai = 1,
-
-                    // SỬA LỖI TẠI ĐÂY: Gán giá trị mặc định cho các cột NOT NULL
                     DiaChi = "Chưa cập nhật",
                     GioiTinh = "Chưa xác định"
                 };
 
                 _db.NhanViens.Add(newEmployee);
-                _db.SaveChanges(); // Lưu hồ sơ nhân viên
+                _db.SaveChanges();
 
-
-                MessageBox.Show("Đăng ký thành công! Vui lòng chờ quản trị viên phê duyệt.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // Quay lại màn hình đăng nhập
+                MessageBox.Show("Đăng ký thành công!");
                 SwitchLogin_Click(null, null);
             }
             catch (Exception ex)
             {
-                // Lấy thông báo lỗi chi tiết từ SQL Server
-                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                MessageBox.Show("Lỗi hệ thống: " + innerMessage, "Lỗi kết nối cơ sở dữ liệu", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
         #endregion

@@ -1,4 +1,3 @@
-Dưới đây là phiên bản đã được làm sạch (xóa `[cite: ...]`, chuẩn hóa format) để bạn copy dễ dàng:
 
 ---
 
